@@ -20,6 +20,7 @@ The app must support several learners sharing one phone and a separate Parent Ar
 - Student-chosen public ID with availability endpoint.
 - Immutable internal UUID for database relations.
 - Six-digit student PIN auth with PBKDF2 + salt.
+- PBKDF2 work factor is now 100,000 iterations because the production Cloudflare Worker rejected 120,000; repository verification prevents values above 100,000 from being reintroduced.
 - Student sessions and login throttling.
 - Shared-device learner chooser and profile switching/removal.
 - Guardian identity, Parent Code + parent PIN.
@@ -45,10 +46,14 @@ The app must support several learners sharing one phone and a separate Parent Ar
 - Human browser screenshot confirms `https://school.0com.my/` loads the current MATRIX Tahun 4 profile/registration UI over HTTPS.
 - GitHub Actions live smoke confirms `school.0com.my` root and `/api/health` are healthy.
 - Human Android screenshots confirm the mobile layout, installed PWA icon on the Home Screen, and installed-app launch in standalone-style presentation.
+- First real learner registration attempt exposed a production error: `Pbkdf2 failed: iteration counts above 100000 are not supported (requested 120000)`.
+- Source was corrected to 100,000 PBKDF2-SHA256 iterations.
+- GitHub `verify` and `live-smoke` passed after the correction.
+- Cloudflare Workers Build succeeded for corrected commit `64f1e19350b616ca4d16e748e9846fa59c6c666b`, deploying Worker version `bbf5eaa1-5b31-4469-b3a6-a4cbadc0f040`.
 
 ## Still NOT fully verified
 Do not claim these complete until manually/runtime tested:
-1. Register a learner and confirm D1 rows/session.
+1. Successful learner registration after the PBKDF2 correction, including D1 rows/session and recovery code.
 2. Logout/login with six-digit PIN.
 3. Duplicate ID and wrong-PIN/lockout behaviour.
 4. Two learners on one shared device with data isolation.
@@ -57,9 +62,10 @@ Do not claim these complete until manually/runtime tested:
 
 ## Exact next safe step
 Human action required next:
-1. Register one learner on `school.0com.my` using `Nama` + chosen available `ID pelajar` + six-digit PIN.
-2. Confirm registration result/recovery code and the learner dashboard.
-3. Then verify logout/login and persistence before adding a second learner.
+1. Relaunch or refresh the installed PWA at `school.0com.my`.
+2. Retry the same learner registration using the already available chosen ID and six-digit PIN.
+3. Confirm the PBKDF2 error is gone and capture the registration result/recovery code/dashboard.
+4. Only after successful registration, test logout/login and persistence.
 
 After that:
 - add a second learner on the same device,

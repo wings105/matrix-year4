@@ -62,7 +62,7 @@ jobs:
           set -euo pipefail
           BASE='https://school.0com.my'
           ROOT="$(curl --connect-timeout 10 --max-time 20 -fsSL "$BASE/")"
-          printf '%s' "$ROOT" | grep -q 'MATRIX Tahun 4'
+          ROOT="$ROOT" node -e "const html=process.env.ROOT||''; if(!html.includes('MATRIX Tahun 4')){console.error('Expected MATRIX Tahun 4 in production root');process.exit(1)}"
           HEALTH="$(curl --connect-timeout 10 --max-time 20 -fsS "$BASE/api/health")"
           HEALTH="$HEALTH" node -e "const d=JSON.parse(process.env.HEALTH||'{}'); if(!(d.ok===true && d.database==='connected' && d.schema==='ready' && d.schemaVersion===2 && d.tables===11)){console.error(d);process.exit(1)}"
           echo "$HEALTH"

@@ -46,6 +46,43 @@ A change is considered verified when there is concrete evidence such as a reposi
 
 Cloudflare tokens, API keys, passwords and credentials must never be committed. Use provider secret/environment configuration.
 
+## ADR-009 — Shared devices support multiple independent learner profiles
+**Status:** Accepted
+
+A phone/tablet/browser may remember several student profiles and allow the user to switch between them.
+
+Rules:
+- Every learner remains a separate D1 identity keyed by immutable `student_id`.
+- A profile switch must lock/end the current learner session before another learner starts.
+- Selecting a remembered learner requires that learner's PIN unless a future parent-approved trusted-device policy explicitly relaxes it.
+- Removing a remembered profile from a device does not delete the learner account or progress.
+- The device itself is not an identity or ownership boundary; using the same device must never merge progress between students.
+
+Reason: siblings and friends may legitimately share one phone, and their learning history must remain fully separated.
+
+## ADR-010 — Device membership does not imply parent/guardian relationship
+**Status:** Accepted
+
+Parent access is based on an explicit guardian-child relation in D1, not on which profiles are present on the same browser/device.
+
+Rules:
+- Parent/guardian has a separate `guardian_id` identity.
+- A guardian may link to several children.
+- A child may later link to more than one guardian.
+- If a parent creates a child from Parent Area, the link may be automatic.
+- Linking an already-existing child requires explicit one-time approval/linking evidence.
+- A friend's student profile added to a shared phone must not appear in the phone owner's Parent Area unless deliberately linked.
+- Unlinking removes guardian access only and does not delete the child's records.
+
+Reason: prevents accidental or unauthorized visibility of another child's learning data.
+
+## ADR-011 — Parent portal uses explicit guardian identity, not the child's login
+**Status:** Accepted
+
+Parent Area must authenticate as a guardian account separate from student credentials. First release may use generated `parent_code` plus parent PIN/passcode with optional recovery contact later.
+
+Parent portal reads student data only through guardian-child link records. Parent actions such as child PIN reset must preserve the child's immutable `student_id` and learning history.
+
 ## Adding or changing a decision
 For a new architectural/product decision:
 1. Add a new ADR entry instead of silently changing an older rationale.

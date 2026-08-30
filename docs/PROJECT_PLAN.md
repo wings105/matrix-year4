@@ -27,7 +27,7 @@ Build a mobile-first, child-friendly Year 4 learning PWA that turns the Day 1–
 - [x] Production custom domain configured in Cloudflare as `school.0com.my`.
 - [x] Verify `https://school.0com.my/` loads the current PWA successfully.
 - [x] Verify `https://school.0com.my/api/health` returns schema-v2 health (`schemaVersion: 2`, 11 tables).
-- [ ] Verify HTTPS/PWA install behaviour on phone.
+- [x] Verify Android mobile layout, Add to Home Screen/PWA installation and installed-app launch.
 
 ## Phase B0 — Student identity, shared devices and Parent Area
 

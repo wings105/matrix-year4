@@ -4,6 +4,18 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — Cloudflare PBKDF2 compatibility correction deployed
+- The first real learner registration attempt exposed a production runtime limit: Cloudflare rejected PBKDF2 with `requested 120000` because iteration counts above 100,000 are unsupported in this Worker environment.
+- Changed the PIN derivation work factor from 120,000 to 100,000 PBKDF2-SHA256 iterations.
+- Added a repository verification guard that fails if a PBKDF2 count above 100,000 is introduced again and confirms the expected 100,000 work factor remains present.
+- Repository syntax/static verification passed after the correction.
+- Live Worker/custom-domain smoke tests passed after the correction.
+- Cloudflare Workers Build completed successfully for commit `64f1e19350b616ca4d16e748e9846fa59c6c666b`, Worker version `bbf5eaa1-5b31-4469-b3a6-a4cbadc0f040`.
+
+**Verification:** GitHub Actions `verify` and `live-smoke` completed successfully and Cloudflare's Worker build check completed with conclusion `success` for the corrected source.
+
+**Scope note:** this verifies that the compatibility correction is in production. A successful learner registration POST is not yet verified; the human must retry registration before that behaviour can be marked complete.
+
 ### Verified — Android PWA install and mobile launch
 - `school.0com.my` renders correctly on the Android mobile layout.
 - The MATRIX PWA was added to the Android Home Screen and appears with its app icon.

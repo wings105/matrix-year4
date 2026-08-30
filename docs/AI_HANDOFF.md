@@ -30,11 +30,11 @@ The app must support several learners sharing one phone and a separate Parent Ar
 - Frontend uses authenticated D1 state.
 - Service worker avoids caching `/api/*`.
 - Schema v2 migration is live.
-- GitHub Actions provides repository verification plus live Worker smoke tests.
+- GitHub Actions provides repository verification plus live Worker/custom-domain smoke tests.
 
 ## Important product decisions
 - Learner chooses public Student ID; do not generate it automatically. See ADR-012.
-- Production custom hostname is now `school.0com.my`, replacing the earlier planned `matrix.0com.my`. See ADR-015.
+- Production custom hostname is `school.0com.my`, replacing the earlier planned `matrix.0com.my`. See ADR-015.
 
 ## Verified live production state
 - Cloudflare Worker build succeeds from `main`.
@@ -42,10 +42,12 @@ The app must support several learners sharing one phone and a separate Parent Ar
 - Live Student ID availability endpoint returned valid/available/normalized output.
 - `0com.my` Cloudflare zone is active.
 - Cloudflare Domains UI shows `school.0com.my` attached to Worker `matrix-year4` in Production.
+- Human browser screenshot confirms `https://school.0com.my/` loads the current MATRIX Tahun 4 profile/registration UI over HTTPS.
+- GitHub Actions live smoke test confirms `school.0com.my` root returns the expected app and `school.0com.my/api/health` returns connected/ready schema v2 with 11 tables.
 
 ## Still NOT fully verified
 Do not claim these complete until manually/runtime tested:
-1. `school.0com.my` PWA root + `/api/health` over HTTPS.
+1. Phone/PWA install and launch from `school.0com.my`.
 2. Register a learner and confirm D1 rows/session.
 3. Logout/login with six-digit PIN.
 4. Duplicate ID and wrong-PIN/lockout behaviour.
@@ -54,11 +56,16 @@ Do not claim these complete until manually/runtime tested:
 7. Checklist/quiz/stats/mistake persistence through real learner sessions.
 
 ## Exact next safe step
-Human browser action:
-1. Open `https://school.0com.my/`.
-2. Confirm current learner/profile UI loads.
-3. Open `https://school.0com.my/api/health` and confirm schema v2/11 tables.
-4. Only after that start real learner registration testing.
+Human action required next:
+1. Open `https://school.0com.my/` on the intended phone.
+2. Verify the mobile view and PWA/Add to Home Screen option.
+3. Then begin one real learner registration using name + chosen available Student ID + six-digit PIN.
+
+After that:
+- test logout/login and persistence,
+- add a second learner on the same device,
+- test Parent Area linking,
+- update `CHANGELOG.md` only for behaviours actually proven.
 
 ## Handoff completion template
 - Request:

@@ -17,9 +17,9 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 - Added `scripts/verify-static.mjs` and `.github/workflows/verify.yml`.
 - Updated project plan, decisions, current state, handoff and README for the chosen-ID direction.
 
-**Verification:** GitHub Actions `Verify repository` completed successfully for branch commit `974fcfbaf66ce6dee0cd0acda11c14754b0f73fe`, checking Worker JavaScript syntax plus frontend/auth/schema/service-worker contracts.
+**Verification:** the feature branch static/contract CI passed; the implementation was fast-forwarded into production branch `main` at `fb5f4c024eee7c7e205b9e9037b96e2527a9fa09`; the subsequent `main` GitHub Actions `Verify repository` run also completed successfully. Checks include Worker JavaScript syntax plus frontend/auth/schema/service-worker contracts.
 
-**Scope note:** this verifies the repository implementation and static/contract checks. It does **not** yet prove live Cloudflare registration, D1 migration, shared-device isolation or guardian linking end-to-end; those remain PENDING in `docs/CURRENT_STATE.md` until tested on the deployed Worker.
+**Scope note:** this verifies repository implementation and CI on `main`. It does **not** yet prove the new Cloudflare build, D1 migration, shared-device isolation or guardian linking end-to-end; those remain PENDING in `docs/CURRENT_STATE.md` until the deployed Worker is tested.
 
 ### Verified — AI/developer governance documentation
 - Added root `AGENTS.md` with mandatory read-before-edit, verification and handoff rules.

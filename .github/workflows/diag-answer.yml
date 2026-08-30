@@ -1,0 +1,29 @@
+name: Quiz answer diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/diag-answer.mjs'
+      - '.github/workflows/diag-answer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - run: node tests/diag-answer.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diag-answer
+          path: diag-answer.png
+          if-no-files-found: ignore

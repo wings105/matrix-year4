@@ -2,58 +2,66 @@
 
 Last updated: 2026-08-30
 
-Use this file as the short operational handoff between AI models or development sessions.
+Use this as the short operational handoff between AI models/sessions. Read `AGENTS.md` first.
 
-## Current request / direction
-Create a maintainable interactive Year 4 learning PWA from the existing Day 1–Day 8 holiday plan, with DLP Mathematics and Science, daily checklist, quizzes, progress, Buku Silap Saya, parent view and later MATRIX exam preparation.
+## Current owner direction
+Build the child identity system now, not later.
 
-The owner also requires durable cross-AI documentation so any future AI model can continue safely without depending on chat memory.
+Student registration UX required by owner:
+- `Nama`
+- learner chooses `ID pelajar`
+- ID availability auto-checks after typing stops
+- `PIN / Password`
+- helper note: `6 digit number`
 
-## Mandatory AI workflow now in place
-Before editing, every AI/developer must read `AGENTS.md` and the linked project documents. Planned, pending and verified work must remain separated.
+The app must also support several learners sharing one phone and a separate Parent Area linked only to explicit children.
 
-Verified documentation system now exists:
-- `AGENTS.md`
-- `CLAUDE.md`
-- `.github/copilot-instructions.md`
-- `CHANGELOG.md`
-- `docs/CURRENT_STATE.md`
-- `docs/PROJECT_PLAN.md`
-- `docs/DECISIONS.md`
-- `docs/AI_HANDOFF.md`
-- `.github/pull_request_template.md`
+## Repository implementation prepared
+- Student-chosen public ID with availability endpoint.
+- Immutable internal UUID for database relations.
+- Six-digit student PIN auth with PBKDF2 + salt.
+- Student sessions and login throttling.
+- Shared-device learner chooser and profile removal/switching.
+- Guardian identity, Parent Code + parent PIN.
+- Guardian-child many-to-many model.
+- One-time six-digit child Link Code.
+- Parent-linked children dashboard, child registration, PIN reset and unlink.
+- Authenticated student progress/quiz/stats/mistake APIs.
+- Frontend uses authenticated D1 state.
+- Service worker avoids caching `/api/*`.
+- D1 schema contains backward-compatible migration logic for the old `students` table.
+- `scripts/verify-static.mjs` and `.github/workflows/verify.yml` were added so future AI/developers have a repeatable repository check.
 
-`CHANGELOG.md` is VERIFIED-ONLY. Code that exists but has not been tested must remain pending in `docs/CURRENT_STATE.md`.
+## Important decision change
+Earlier docs said the public student code would be generated. Owner changed this: the learner chooses the public Student ID.
 
-## What is already verified
-- GitHub repository exists and `main` is production source.
-- Cloudflare Worker deployment is live at `https://matrix-year4.msg-ebye.workers.dev/`.
-- Cloudflare D1 `matrix-year4-db` is bound as `DB`.
-- `/api/health` was manually verified with `ok=true`, `database=connected`, `schema=ready`, `tables=6`.
-- Core prototype UI exists for Day 1–Day 8, quizzes, rewards, Buku Silap and Parent Area.
-- AI/developer governance files listed above were confirmed present on GitHub `main`.
+Do not reverse this. See ADR-012 in `docs/DECISIONS.md`.
 
-## What changed recently but is still pending full verification
-- Worker persistence APIs were added for state/progress/quiz/stats/mistakes.
-- Service worker was changed so `/api/*` should bypass cache.
-- These changes should not be called fully shipped until endpoint/browser tests confirm them.
+## Verification status
+Source syntax was checked before repository update, but runtime production behaviour is not automatically proven by source existence.
 
-## Infrastructure currently waiting on user/provider
-- `0com.my` is being moved to Cloudflare nameservers.
-- Intended hostname is `matrix.0com.my`.
-- Wait for Cloudflare zone status `Active` before connecting the custom domain.
+Do NOT claim student/guardian registration is fully shipped until:
+1. Cloudflare deploy is confirmed.
+2. `/api/health` shows the new schema version.
+3. Student ID availability works on live Worker.
+4. At least one real student register/login/state flow is tested.
+5. Shared-device isolation is tested with two profiles.
+6. Guardian link flow is tested.
+
+## Custom domain status
+`0com.my` nameservers were changed to Cloudflare and zone activation was still pending during this work. Intended final hostname remains `matrix.0com.my`.
 
 ## Exact next safe step
-1. Confirm `0com.my` becomes Active in Cloudflare.
-2. Connect `matrix.0com.my` to Worker `matrix-year4`.
-3. Test both:
-   - `https://matrix.0com.my/`
-   - `https://matrix.0com.my/api/health`
-4. Record custom-domain success in `CHANGELOG.md` only after both tests pass.
-5. Then verify persistence endpoints one at a time before wiring frontend state to D1.
+After merge/deploy:
+1. Open live `/api/health`.
+2. Open `/api/auth/student-id-availability?id=testmatrix`.
+3. Test registration UI with a disposable test learner.
+4. Confirm the test learner can log out/login and state persists.
+5. Test second learner on same device.
+6. Test Parent Area link.
+7. Record only actually proven runtime behaviour in `CHANGELOG.md`.
 
 ## Handoff completion template
-At the end of any meaningful AI development session, replace/add a short section containing:
 - Request:
 - Files changed:
 - Verification performed:

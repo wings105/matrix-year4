@@ -25,8 +25,8 @@ Build a mobile-first, child-friendly Year 4 learning PWA that turns the Day 1–
 - [x] Automated live smoke checks on `main` for Worker health/schema and Student ID availability.
 - [x] `0com.my` Cloudflare zone activated after nameserver migration.
 - [x] Production custom domain configured in Cloudflare as `school.0com.my`.
-- [ ] Verify `https://school.0com.my/` loads the PWA successfully.
-- [ ] Verify `https://school.0com.my/api/health` returns the expected live health response.
+- [x] Verify `https://school.0com.my/` loads the current PWA successfully.
+- [x] Verify `https://school.0com.my/api/health` returns schema-v2 health (`schemaVersion: 2`, 11 tables).
 - [ ] Verify HTTPS/PWA install behaviour on phone.
 
 ## Phase B0 — Student identity, shared devices and Parent Area

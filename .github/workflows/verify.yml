@@ -56,3 +56,13 @@ jobs:
           RESPONSE="$(curl --connect-timeout 10 --max-time 20 -fsS "$BASE/api/auth/student-id-availability?id=$TEST_ID")"
           RESPONSE="$RESPONSE" node -e "const d=JSON.parse(process.env.RESPONSE||'{}'); if(!(d.ok===true && d.valid===true && d.available===true && d.normalizedId)){console.error(d);process.exit(1)}"
           echo "$RESPONSE"
+      - name: Verify production custom domain root and health
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://school.0com.my'
+          ROOT="$(curl --connect-timeout 10 --max-time 20 -fsSL "$BASE/")"
+          printf '%s' "$ROOT" | grep -q 'MATRIX Tahun 4'
+          HEALTH="$(curl --connect-timeout 10 --max-time 20 -fsS "$BASE/api/health")"
+          HEALTH="$HEALTH" node -e "const d=JSON.parse(process.env.HEALTH||'{}'); if(!(d.ok===true && d.database==='connected' && d.schema==='ready' && d.schemaVersion===2 && d.tables===11)){console.error(d);process.exit(1)}"
+          echo "$HEALTH"

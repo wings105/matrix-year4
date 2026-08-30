@@ -4,6 +4,19 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — structured Day 1–Day 8 source learning modules deployed
+- Added `learning-content.js` as the structured learning-content source for the learner app, based on the supplied Day 1–Day 8 MATRIX preparation modules.
+- Added Day-specific themes, targets and learning modules instead of relying only on the earlier small generic quiz bank.
+- Coverage now includes Day 1 diagnostics; Day 2 Bahasa & Nombor; Day 3 Sejarah/Science; Day 4 Math Power; Day 5 English + Science; Day 6 STEM; Day 7 consolidation/topik merah; and Day 8 Mini MATRIX, red-topic planning and back-to-school reflection.
+- The learning screen now renders a `Modul Pembelajaran Day X` library, and `Mula Misi Day Ini` can choose the first incomplete structured module.
+- Objective modules have topic-specific interactive questions; writing/STEM/reflection modules are explicit activities that can be marked complete.
+- Module completion is wired to the existing authenticated D1 progress API using `module-<module-id>` task keys.
+- Repository static verification now permanently checks that all eight Day definitions, key source modules, module renderer/launcher and traffic-light thresholds remain present.
+
+**Verification:** the one-time source-module integration workflow completed successfully; repository integration checks passed; Cloudflare Workers Build completed successfully for commit `e851e0c21c585d540f0b66939b849c68356f58d3`, deploying Worker version `434f0ea4-790e-4400-a40c-09a2166b5b6b`.
+
+**Scope note:** this verifies implementation and production deployment. Individual lesson interactions, D1 module persistence, Day switching and phone rendering of every new module still require human runtime verification before those behaviours are claimed complete.
+
 ### Verified — real learner registration reaches authenticated dashboard
 - After the PBKDF2 work factor correction, a real learner registration succeeded in the installed Android PWA.
 - The learner dashboard opened with the registered learner name, Day 1 content and cloud-loaded starting state.

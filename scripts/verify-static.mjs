@@ -21,6 +21,12 @@ must(index, '6 digit number', 'PIN helper note');
 must(index, '/api/auth/student-id-availability', 'ID availability frontend call');
 must(index, 'Siapa yang belajar sekarang?', 'shared-device profile chooser');
 must(index, 'Parent Area', 'Parent Area UI');
+must(index, 'function startMission()', 'Day mission launcher');
+must(index, 'function startTaskModule(', 'task module launcher');
+must(index, 'function saveTaskProgress(', 'task progress persistence helper');
+must(index, 'function renderRewards()', 'dynamic rewards renderer');
+must(index, "window.scrollTo({top:0", 'screen navigation scroll reset');
+must(index, 'id="missionContext"', 'learning module context UI');
 
 must(worker, '/api/auth/student/register', 'student registration route');
 must(worker, '/api/auth/student/login', 'student login route');
@@ -45,4 +51,4 @@ for (const table of ['guardians', 'guardian_students', 'sessions', 'link_codes',
 must(schema, 'student_code TEXT UNIQUE COLLATE NOCASE', 'chosen public student ID schema');
 must(sw, "url.pathname.startsWith('/api/')", 'API cache bypass');
 
-console.log('Static verification passed: auth UI, routes, Cloudflare-compatible PBKDF2, schema and service-worker guards are present.');
+console.log('Static verification passed: auth, interactive learning modules, Cloudflare-compatible PBKDF2, schema and service-worker guards are present.');

@@ -1,0 +1,13 @@
+{
+  "name": "MATRIX Tahun 4",
+  "short_name": "MATRIX T4",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#eef8ff",
+  "theme_color": "#0d4fb8",
+  "description": "Interactive Year 4 MATRIX learning app with DLP Math and Science.",
+  "icons": [
+    {"src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

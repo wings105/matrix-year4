@@ -40,7 +40,7 @@ Wrong answers feed `Buku Silap Saya`; mastery should use green/yellow/red rather
 ## ADR-008 — No secrets in repository
 **Status:** Accepted
 
-Cloudflare tokens, API keys, passwords, PINs and recovery codes must never be committed. Store only safe configuration in Git.
+Cloudflare tokens, API keys, passwords, PINs and recovery codes must never be committed.
 
 ## ADR-009 — Shared devices support multiple independent learner profiles
 **Status:** Accepted
@@ -92,19 +92,15 @@ Rules:
 - Backend still generates an immutable UUID `student_id`; all learning records and guardian links use this internal UUID.
 - Changing a display name or resetting a PIN must never change internal `student_id` or lose history.
 
-Reason: a self-chosen ID is easier for a child to remember while the internal UUID preserves stable database relationships.
-
 ## ADR-013 — Remember profile metadata locally, keep active token session-scoped
 **Status:** Accepted
 
 For the shared-device first release:
 - Local remembered learner profile stores only display name + public Student ID.
 - Local remembered guardian profile stores only display name + Parent Code.
-- Raw bearer tokens are not stored in the remembered profile list.
-- The active bearer token is stored only in `sessionStorage` and is also represented server-side by a SHA-256 token hash with expiry/revocation.
+- Raw bearer tokens are not stored in remembered profile lists.
+- Active bearer token is stored only in `sessionStorage` and represented server-side by SHA-256 token hash with expiry/revocation.
 - Switching user calls logout/revocation and requires PIN again for the next actor.
-
-Reason: supports convenient shared-device switching without treating local profile metadata as proof of authentication.
 
 ## ADR-014 — Parent-child linking uses one-time Link Code
 **Status:** Accepted
@@ -117,6 +113,19 @@ For an existing student account:
 - Same-device presence is never sufficient for linking.
 
 A child created by an authenticated guardian inside Parent Area may be linked automatically.
+
+## ADR-015 — Production custom hostname is `school.0com.my`
+**Status:** Accepted
+
+The owner chose `school.0com.my` as the production custom hostname for this app. This replaces the earlier planned hostname `matrix.0com.my`.
+
+Rules:
+- Treat `school.0com.my` as the canonical intended custom-domain hostname in roadmap, handoff and runtime checks.
+- Keep the Worker name `matrix-year4`; the public hostname does not require renaming the Worker/repository.
+- Do not reintroduce `matrix.0com.my` unless the owner explicitly changes direction again.
+- Runtime success must still be verified separately by loading the PWA and `/api/health` over HTTPS on `school.0com.my`.
+
+Reason: the owner prefers a broader school-oriented hostname while retaining the current MATRIX app/project internals.
 
 ## Adding or changing a decision
 For a new architectural/product decision:

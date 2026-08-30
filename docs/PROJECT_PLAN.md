@@ -41,14 +41,16 @@ Repository implementation:
 - [x] Student ID auto-checks availability after typing stops.
 - [x] Current Student ID format: normalized lowercase, 3–20 characters, letters/numbers/`-`/`_`.
 - [x] Plain PIN is never stored; PBKDF2-SHA256 + random per-user salt is used.
+- [x] PBKDF2 work factor is capped at 100,000 for Cloudflare Workers compatibility and guarded by static verification.
 - [x] One-time recovery code is returned at registration; only its hash is stored.
 - [x] Learning data uses immutable internal UUID, never the public Student ID as ownership key.
 
 Runtime verification:
 - [x] Live Student ID availability endpoint verified against production D1.
-- [ ] Register one real/disposable learner and confirm expected D1/session behaviour.
+- [x] Register one real learner and enter authenticated cloud-backed dashboard successfully.
+- [ ] Verify fresh logout/login with the same PIN.
 - [ ] Verify duplicate Student ID conflict.
-- [ ] Verify correct/wrong PIN login and temporary lockout end-to-end.
+- [ ] Verify wrong PIN and temporary lockout end-to-end.
 
 ### Several learners on one device
 Repository implementation:
@@ -113,23 +115,40 @@ Repository implementation:
 - [x] Checklist writes to D1 through authenticated session.
 - [x] Quiz attempts and wrong answers write to D1.
 - [x] XP, stars, streak and DLP language use D1 state.
-- [x] Student state loads from D1 after login.
+- [x] Student state loads from D1 after login/registration session.
 - [x] Manual legacy-browser checklist import exists.
 - [x] Guardians, sessions, link codes, auth failures and guardian-child links exist in schema v2.
 - [x] Existing production D1 accepted schema v2 migration successfully.
 
 Production verification still required:
-- [ ] Verify authenticated write/read endpoints through a real learner session.
+- [ ] Verify checklist write/read through the real learner session.
+- [ ] Verify quiz -> XP/Buku Silap -> reload persistence.
 - [ ] Verify progress survives reload and second-device login.
 - [ ] Verify profile switching never mixes records.
 - [ ] Verify Parent Area reads only linked children.
 
 ## Phase C — Learning content and UX
-- [ ] Convert Day 1–Day 8 content into structured content/question data.
+Repository implementation now:
+- [x] Day 1–Day 8 tasks have actionable `Buka` / `Ulang` module controls.
+- [x] `Mula Misi Day Ini` launches the first incomplete task for the selected Day.
+- [x] Subject tasks route into Math/Science/BM/English practice.
+- [x] Generic activities can be explicitly completed and synced.
+- [x] Correct answer can complete the active module through existing progress API.
+- [x] Screen navigation resets mobile scroll position so taps visibly change screens.
+- [x] Quick quizzes rotate questions instead of randomly repeating the same item.
+- [x] Reward badges render locked/unlocked state from real progress.
+
+Runtime verification still required:
+- [ ] Human phone test of Day selector -> module -> answer -> XP/progress update.
+- [ ] Human phone test of wrong answer -> `Buku Silap Saya`.
+- [ ] Human phone test of badges updating after progress.
+
+Next content depth:
+- [ ] Convert Day 1–Day 8 content into richer structured content/question data.
 - [ ] Expand Mathematics bank by topic/difficulty.
 - [ ] Expand Science bank by topic/scientific-process skill.
 - [ ] Expand BM and English activities.
-- [ ] Daily flow: mission -> explanation -> practice -> feedback -> reflection.
+- [ ] Full daily flow: mission -> explanation -> guided practice -> feedback -> reflection.
 - [ ] Mastery calculation by topic.
 - [ ] Revision queue from `Buku Silap Saya`.
 - [ ] Clear parent summary of strengths, weaknesses and completed work.
@@ -160,7 +179,7 @@ Only after the core data flow is reliable:
 1. `school.0com.my` loads reliably on phone and desktop.
 2. Student can register with name + chosen available Student ID + six-digit PIN without phone/email.
 3. Several students can switch safely on one shared device.
-4. Student can complete Day 1–Day 8 checklist and quizzes.
+4. Student can open and complete Day 1–Day 8 modules/checklists and quizzes.
 5. Progress, quiz results, mistakes and stats persist in D1 under the correct internal student UUID.
 6. Parent view reads only explicitly linked children and can reset child PIN safely.
 7. PWA installs from Android browser/Home Screen.

@@ -44,6 +44,10 @@ button,input,select{font:inherit}.hidden{display:none!important}.muted{color:var
 }
 @media(max-width:380px){.main{padding-left:9px;padding-right:9px}.chips{grid-template-columns:1fr auto auto}.chip{padding:6px 7px}.grid5{gap:6px}.panel{padding:12px}.subject{grid-template-columns:auto minmax(0,1fr)}.subject .btn{grid-column:2;justify-self:start}.day{min-width:38px;width:38px;height:38px}}
 </style>
+
+<style id="learning-module-styles">
+.learning-modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.learning-card{border:1px solid #e2e8f0;border-radius:16px;padding:13px;background:#fff;min-width:0}.learning-card.done{background:#f0fdf4;border-color:#86efac}.learning-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.learning-head>div{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.learning-head b{font-size:13px}.learning-card p{font-size:12px;line-height:1.4;margin:8px 0}.learning-card small{font-size:10px;line-height:1.35;color:#64748b}.learning-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}.module-topic-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}@media(max-width:760px){.learning-modules{grid-template-columns:1fr}.learning-card{padding:12px}.learning-head b{font-size:12px}}
+</style>
 </head>
 <body>
 
@@ -118,6 +122,7 @@ button,input,select{font:inherit}.hidden{display:none!important}.muted{color:var
 <section id="screen-learn" class="screen">
   <div class="top"><div><h1>📚 Belajar</h1><div class="muted">Buka modul Day, jawab latihan dan progress akan sync ke profil ini.</div></div><div class="chips"><button class="chip" onclick="setLang('bm')">BM</button><button class="chip" onclick="setLang('en')">EN</button><button class="chip" onclick="setLang('dual')">Dwi</button></div></div>
   <div id="missionContext" class="notice hidden" style="max-width:760px"></div>
+  <div class="panel" style="max-width:900px;margin-bottom:14px"><h3>🧩 Modul Pembelajaran Day <span id="learningDayNo">1</span></h3><div class="muted" id="learningDayGoal"></div><div id="learningModules" class="learning-modules"></div></div>
   <div class="panel" style="max-width:760px"><div id="quizSubject" class="tag">Mathematics DLP</div><div id="quizQuestion" class="quizq"></div><div id="quizTranslate" class="muted" style="margin-bottom:12px"></div><div id="answers" class="answers"></div><div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn soft" onclick="newQuestion('Math')">🔢 Math</button><button class="btn soft" onclick="newQuestion('Science')">🔬 Science</button><button class="btn soft" onclick="newQuestion('BM')">📝 BM</button><button class="btn soft" onclick="newQuestion('English')">🇬🇧 English</button></div></div>
 </section>
 <section id="screen-mistakes" class="screen"><div class="top"><div><h1>📕 Buku Silap Saya</h1><div class="muted">Kesalahan disimpan pada profil pelajar ini sahaja.</div></div></div><div id="mistakeList" class="panel"></div></section>
@@ -148,6 +153,7 @@ button,input,select{font:inherit}.hidden{display:none!important}.muted{color:var
 
 <div class="toast" id="toast"></div>
 
+<script src="/learning-content.js"></script>
 <script>
 const STUDENT_PROFILES_KEY='matrix_student_profiles_v2';
 const GUARDIAN_PROFILES_KEY='matrix_guardian_profiles_v1';
@@ -187,7 +193,7 @@ English:[
 
 let active=null;
 let state={student:null,stats:{xp:0,stars:0,streak:1,preferred_language:'dual'},progress:[],mistakes:[]};
-let currentDay=1,currentQuiz=null,currentTask=null,idTimer=null,parentIdTimer=null,parentChildrenCache=[];
+let currentDay=1,currentQuiz=null,currentTask=null,activeLearningModule=null,idTimer=null,parentIdTimer=null,parentChildrenCache=[];
 const quizCursor={Math:-1,Science:-1,BM:-1,English:-1};
 
 const $=id=>document.getElementById(id);
@@ -357,13 +363,13 @@ function renderStudent(){
   $('streak').textContent=(st.streak||1)+' 🔥';$('rewardStreak').textContent=st.streak||1;$('streakTop').textContent=st.streak||1;$('sideStreak').textContent=st.streak||1;
   $('mistakeCount').textContent=(state.mistakes||[]).filter(m=>m.status==='open').length;
   const langLabel={bm:'Bahasa Melayu',en:'English',dual:'Dwi Bahasa'}[st.preferred_language||'dual'];$('langSetting').textContent=langLabel;
-  renderDays();renderTasks();renderSubjects();renderMistakes();renderRewards();renderMissionContext();
+  renderDays();renderTasks();renderSubjects();renderMistakes();renderRewards();renderMissionContext();renderLearningModules();
   if(!currentQuiz)newQuestion('Math');
 }
 function renderDays(){
   $('days').innerHTML=DAYS.map((d,i)=>{const day=i+1;return `<button class="day ${day===currentDay?'current':''} ${dayDone(day)?'done':''}" onclick="selectDay(${day})">${day}</button>`}).join('');
 }
-function selectDay(day){currentDay=day;currentTask=null;renderDays();renderTasks();renderMissionContext();}
+function selectDay(day){currentDay=day;currentTask=null;activeLearningModule=null;renderDays();renderTasks();renderMissionContext();renderLearningModules();}
 function renderTasks(){
   const d=DAYS[currentDay-1];$('heroTitle').textContent=`Day ${currentDay} — ${d.theme}`;$('heroDesc').textContent=d.desc;$('themeText').textContent=`Day ${currentDay}: ${d.theme}`;$('targetText').textContent=d.desc;$('progressLabel').textContent=`Progress Day ${currentDay}`;
   $('tasks').innerHTML=d.tasks.map((t,i)=>{const key=`d${currentDay}-t${i}`;const done=progressDone(currentDay,key);return `<label class="task"><input type="checkbox" ${done?'checked':''} onchange="toggleTask(${currentDay},'${key}',this)"><div><b>${safe(t)}</b><small>${done?'Selesai & sync ✓':'Belum selesai'} • ${currentDay}.${i+1}</small></div><button type="button" class="btn soft task-open" onclick="event.preventDefault();event.stopPropagation();startTaskModule(${currentDay},${i})">${done?'Ulang':'Buka'}</button></label>`}).join('');
@@ -378,9 +384,22 @@ async function toggleTask(day,key,el){
   try{await saveTaskProgress(day,key,el.checked);renderStudent();toast(el.checked?'Disimpan ✓':'Tugasan dibuka semula')}catch(e){el.checked=!el.checked;toast(e.message)}
 }
 function taskSubject(title){const t=String(title).toLowerCase();if(t.includes('math'))return 'Math';if(t.includes('science')||t.includes('sains')||t.includes('stem'))return 'Science';if(t.includes('english')||t.includes('vocabulary'))return 'English';if(t.includes('bm')||t.includes('bahasa melayu'))return 'BM';return null}
+function sourceDay(day=currentDay){return window.MATRIX_LEARNING?.days?.[day]||null}
+function renderLearningModules(){
+  const d=sourceDay();if(!$('learningModules'))return;$('learningDayNo').textContent=currentDay;$('learningDayGoal').textContent=d?`${d.goal} • Sasaran: ${d.target}`:'Modul belum dimuatkan.';
+  const mods=d?.modules||[];$('learningModules').innerHTML=mods.map(m=>{const key=`module-${m.id}`;const done=progressDone(currentDay,key);const topics=(m.topics||[]).slice(0,5).join(' • ');return `<div class="learning-card ${done?'done':''}"><div class="learning-head"><div><span class="tag">${safe(m.subject)}</span><b>${safe(m.title)}</b></div><span>${done?'✅':'◻️'}</span></div><p>${safe(m.desc||'')}</p><small>${safe(topics)}</small><div class="learning-actions"><button class="btn ${done?'soft':'blue'}" onclick="openLearningModule('${safe(m.id)}')">${done?'Ulang modul':'Mula modul'}</button>${m.target?`<span class="tag">Target ${m.target}%</span>`:''}</div></div>`}).join('');
+}
+function findLearningModule(id){return sourceDay()?.modules?.find(m=>m.id===id)||null}
 function startMission(){
+  const mods=sourceDay()?.modules||[];let m=mods.find(x=>!progressDone(currentDay,`module-${x.id}`))||mods[0];if(m){openLearningModule(m.id);return}
   const d=DAYS[currentDay-1];let idx=d.tasks.findIndex((_,i)=>!progressDone(currentDay,`d${currentDay}-t${i}`));if(idx<0)idx=0;startTaskModule(currentDay,idx);
 }
+function openLearningModule(id){
+  const m=findLearningModule(id);if(!m){toast('Modul tidak dijumpai');return}activeLearningModule=m;currentTask={day:currentDay,index:-1,key:`module-${m.id}`,title:m.title,subject:m.subject==='Activity'?null:m.subject,moduleId:m.id};
+  if(m.type==='quiz'&&m.questions?.length){newQuestion(m.subject)}else{currentQuiz=null;$('quizSubject').textContent=`Day ${currentDay} • ${m.subject}`;$('quizQuestion').textContent=m.title;$('quizTranslate').textContent=m.desc||'Selesaikan aktiviti ini.';$('answers').innerHTML=`<div class="module-topic-list">${(m.topics||[]).map(t=>`<span class="tag">${safe(t)}</span>`).join('')}</div><button class="soft" onclick="completeCurrentTask()">✓ Tandakan modul siap</button>`}
+  renderMissionContext();go('learn');
+}
+
 function startTaskModule(day,index){
   currentDay=day;const title=DAYS[day-1].tasks[index];const key=`d${day}-t${index}`;const subject=taskSubject(title);currentTask={day,index,key,title,subject};renderDays();renderTasks();
   if(subject)newQuestion(subject);else{currentQuiz=null;$('quizSubject').textContent=`Day ${day} • Aktiviti`;$('quizQuestion').textContent=title;$('quizTranslate').textContent='Buat aktiviti ini dahulu. Bila selesai, tekan Tandakan siap.';$('answers').innerHTML='<button class="soft" onclick="completeCurrentTask()">✓ Tandakan aktiviti siap</button>';}
@@ -390,10 +409,10 @@ function renderMissionContext(){
   const el=$('missionContext');if(!el)return;if(!currentTask){el.classList.add('hidden');el.innerHTML='';return}
   const done=progressDone(currentTask.day,currentTask.key);el.classList.remove('hidden');el.innerHTML=`<b>Day ${currentTask.day} • ${safe(currentTask.title)}</b><br><small>${done?'Progress modul ini sudah disimpan ✓':'Selesaikan modul ini. Untuk quiz, jawab betul untuk auto-complete.'}</small>${done?` <button class="btn soft" onclick="selectDay(${currentTask.day});go('home')">Kembali Day ${currentTask.day}</button>`:''}`;
 }
-async function completeCurrentTask(){if(!currentTask)return;try{await saveTaskProgress(currentTask.day,currentTask.key,true);renderStudent();renderMissionContext();toast('Modul selesai & sync ✓')}catch(e){toast(e.message)}}
+async function completeCurrentTask(){if(!currentTask)return;try{await saveTaskProgress(currentTask.day,currentTask.key,true);renderStudent();renderMissionContext();renderLearningModules();toast('Modul selesai & sync ✓')}catch(e){toast(e.message)}}
 function renderSubjects(){
   const data=[['🔢','Mathematics DLP','Math'],['🔬','Science DLP','Science'],['📝','Bahasa Melayu','BM'],['🇬🇧','English','English']];
-  $('subjects').innerHTML=data.map(x=>`<div class="subject"><div class="ico">${x[0]}</div><div class="grow"><b>${x[1]}</b><small class="muted">Quiz cepat</small></div><button class="btn soft" onclick="newQuestion('${x[2]}');go('learn')">Mula</button></div>`).join('');
+  $('subjects').innerHTML=data.map(x=>`<div class="subject"><div class="ico">${x[0]}</div><div class="grow"><b>${x[1]}</b><small class="muted">Quick practice</small></div><button class="btn soft" onclick="activeLearningModule=null;currentTask=null;newQuestion('${x[2]}');renderMissionContext();go('learn')">Mula</button></div>`).join('');
 }
 function go(name){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));const target=$('screen-'+name);if(target)target.classList.add('active');
@@ -403,7 +422,7 @@ function go(name){
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>go(btn.dataset.screen)));
 
 function newQuestion(subject){
-  const list=QUIZ[subject];if(!Array.isArray(list)||!list.length){toast('Modul belum ada soalan');return}quizCursor[subject]=(quizCursor[subject]+1)%list.length;currentQuiz={subject,q:list[quizCursor[subject]],answered:false};
+  const moduleList=(activeLearningModule&&activeLearningModule.subject===subject&&Array.isArray(activeLearningModule.questions))?activeLearningModule.questions:null;const list=moduleList?.length?moduleList:QUIZ[subject];if(!Array.isArray(list)||!list.length){toast('Modul belum ada soalan');return}const cursorKey=activeLearningModule?.id||subject;if(!(cursorKey in quizCursor))quizCursor[cursorKey]=-1;quizCursor[cursorKey]=(quizCursor[cursorKey]+1)%list.length;currentQuiz={subject,q:list[quizCursor[cursorKey]],answered:false};
   const q=currentQuiz.q;const lang=state.stats?.preferred_language||'dual';$('quizSubject').textContent=subject+(subject==='Math'||subject==='Science'?' DLP':'');
   if(lang==='en'&&q.en){$('quizQuestion').textContent=q.en;$('quizTranslate').textContent=''}
   else if(lang==='bm'||!q.en){$('quizQuestion').textContent=q.bm||q.en;$('quizTranslate').textContent=''}

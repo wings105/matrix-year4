@@ -5,9 +5,9 @@ Last updated: 2026-08-30
 Use this as the short operational handoff between AI models/sessions. Read `AGENTS.md` first.
 
 ## Current owner direction
-Student identity/authentication is now a core feature.
+Student identity/authentication is a core feature.
 
-Student registration UX required by owner:
+Student registration UX:
 - `Nama`
 - learner chooses `ID pelajar`
 - ID availability auto-checks after typing stops
@@ -16,58 +16,49 @@ Student registration UX required by owner:
 
 The app must support several learners sharing one phone and a separate Parent Area linked only to explicit children.
 
-## Repository implementation now on `main`
+## Repository implementation on `main`
 - Student-chosen public ID with availability endpoint.
 - Immutable internal UUID for database relations.
 - Six-digit student PIN auth with PBKDF2 + salt.
 - Student sessions and login throttling.
-- Shared-device learner chooser and profile removal/switching.
+- Shared-device learner chooser and profile switching/removal.
 - Guardian identity, Parent Code + parent PIN.
 - Guardian-child many-to-many model.
 - One-time six-digit child Link Code.
-- Parent-linked children dashboard, child registration, PIN reset and unlink.
+- Parent linked-child dashboard, child registration, PIN reset and unlink.
 - Authenticated student progress/quiz/stats/mistake APIs.
 - Frontend uses authenticated D1 state.
 - Service worker avoids caching `/api/*`.
-- D1 schema contains backward-compatible migration logic for the old `students` table.
-- `scripts/verify-static.mjs` and `.github/workflows/verify.yml` provide repeatable repository checks.
-- `main` CI includes a live smoke test against the public Cloudflare Worker.
+- Schema v2 migration is live.
+- GitHub Actions provides repository verification plus live Worker smoke tests.
 
-## Important decision change
-Earlier docs said the public student code would be generated. Owner changed this: the learner chooses the public Student ID.
-
-Do not reverse this. See ADR-012 in `docs/DECISIONS.md`.
+## Important product decisions
+- Learner chooses public Student ID; do not generate it automatically. See ADR-012.
+- Production custom hostname is now `school.0com.my`, replacing the earlier planned `matrix.0com.my`. See ADR-015.
 
 ## Verified live production state
-Cloudflare build and public GET smoke tests are now proven:
-- Cloudflare Workers Build completed successfully for current `main`.
-- Live `/api/health` returned `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
-- Live `/api/auth/student-id-availability` returned `ok=true`, `valid=true`, `available=true` for a unique CI-generated ID.
-- `live-smoke` now repeats these checks on future `main` pushes.
+- Cloudflare Worker build succeeds from `main`.
+- Live `/api/health` on workers.dev returned `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
+- Live Student ID availability endpoint returned valid/available/normalized output.
+- `0com.my` Cloudflare zone is active.
+- Cloudflare Domains UI shows `school.0com.my` attached to Worker `matrix-year4` in Production.
 
 ## Still NOT fully verified
-Do not yet claim the complete student/guardian flow is shipped until POST/session/manual flows are tested:
-1. Register a learner and confirm D1 rows/session.
-2. Logout/login with the six-digit PIN.
-3. Verify duplicate ID and wrong-PIN/lockout behaviour.
-4. Test two learners on one shared device and confirm data isolation.
-5. Register guardian and test Link Code / linked-child isolation.
-6. Verify checklist/quiz/stats/mistake persistence through real learner sessions.
-
-## Custom domain status
-`0com.my` nameservers were changed to Cloudflare and zone activation was still pending during this work. Intended final hostname remains `matrix.0com.my`.
+Do not claim these complete until manually/runtime tested:
+1. `school.0com.my` PWA root + `/api/health` over HTTPS.
+2. Register a learner and confirm D1 rows/session.
+3. Logout/login with six-digit PIN.
+4. Duplicate ID and wrong-PIN/lockout behaviour.
+5. Two learners on one shared device with data isolation.
+6. Guardian registration + Link Code + linked-child isolation.
+7. Checklist/quiz/stats/mistake persistence through real learner sessions.
 
 ## Exact next safe step
-The next action requiring a human browser is now:
-1. Open `https://matrix-year4.msg-ebye.workers.dev/`.
-2. Register one learner using name + chosen available Student ID + six-digit PIN.
-3. Confirm the registration screen/result and send the result/screenshot for verification.
-
-After that:
-- test logout/login and persistence,
-- add a second learner on the same device,
-- test Parent Area linking,
-- then update `CHANGELOG.md` only for behaviours actually proven.
+Human browser action:
+1. Open `https://school.0com.my/`.
+2. Confirm current learner/profile UI loads.
+3. Open `https://school.0com.my/api/health` and confirm schema v2/11 tables.
+4. Only after that start real learner registration testing.
 
 ## Handoff completion template
 - Request:

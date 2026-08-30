@@ -1,8 +1,14 @@
 PRAGMA foreign_keys = ON;
 
+-- Immutable internal student identity. `student_code` is the public ID chosen by
+-- the learner during registration and is used for login / device pairing.
 CREATE TABLE IF NOT EXISTS students (
   id TEXT PRIMARY KEY,
+  student_code TEXT UNIQUE COLLATE NOCASE,
   name TEXT NOT NULL,
+  pin_hash TEXT,
+  pin_salt TEXT,
+  recovery_hash TEXT,
   year_level INTEGER NOT NULL DEFAULT 4,
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -56,6 +62,60 @@ CREATE TABLE IF NOT EXISTS student_stats (
   FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS guardians (
+  id TEXT PRIMARY KEY,
+  parent_code TEXT NOT NULL UNIQUE COLLATE NOCASE,
+  name TEXT NOT NULL,
+  pin_hash TEXT NOT NULL,
+  pin_salt TEXT NOT NULL,
+  recovery_hash TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS guardian_students (
+  guardian_id TEXT NOT NULL,
+  student_id TEXT NOT NULL,
+  relationship TEXT NOT NULL DEFAULT 'guardian',
+  role TEXT NOT NULL DEFAULT 'owner' CHECK(role IN ('owner','guardian','viewer')),
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(guardian_id, student_id),
+  FOREIGN KEY(guardian_id) REFERENCES guardians(id) ON DELETE CASCADE,
+  FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  token_hash TEXT NOT NULL UNIQUE,
+  actor_type TEXT NOT NULL CHECK(actor_type IN ('student','guardian')),
+  actor_id TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  revoked_at TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS link_codes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id TEXT NOT NULL,
+  code_hash TEXT NOT NULL UNIQUE,
+  expires_at TEXT NOT NULL,
+  used_at TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS auth_failures (
+  scope_key TEXT PRIMARY KEY,
+  fail_count INTEGER NOT NULL DEFAULT 0,
+  locked_until TEXT,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE INDEX IF NOT EXISTS idx_progress_student_day ON daily_progress(student_id, day_no);
 CREATE INDEX IF NOT EXISTS idx_quiz_student_subject ON quiz_attempts(student_id, subject);
 CREATE INDEX IF NOT EXISTS idx_mistakes_student_status ON mistakes(student_id, status);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_students_code_unique ON students(student_code COLLATE NOCASE) WHERE student_code IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_sessions_actor ON sessions(actor_type, actor_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token_hash);
+CREATE INDEX IF NOT EXISTS idx_guardian_students_student ON guardian_students(student_id);

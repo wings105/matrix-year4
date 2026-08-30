@@ -7,12 +7,31 @@ Use this file as the short operational handoff between AI models or development 
 ## Current request / direction
 Create a maintainable interactive Year 4 learning PWA from the existing Day 1–Day 8 holiday plan, with DLP Mathematics and Science, daily checklist, quizzes, progress, Buku Silap Saya, parent view and later MATRIX exam preparation.
 
+The owner also requires durable cross-AI documentation so any future AI model can continue safely without depending on chat memory.
+
+## Mandatory AI workflow now in place
+Before editing, every AI/developer must read `AGENTS.md` and the linked project documents. Planned, pending and verified work must remain separated.
+
+Verified documentation system now exists:
+- `AGENTS.md`
+- `CLAUDE.md`
+- `.github/copilot-instructions.md`
+- `CHANGELOG.md`
+- `docs/CURRENT_STATE.md`
+- `docs/PROJECT_PLAN.md`
+- `docs/DECISIONS.md`
+- `docs/AI_HANDOFF.md`
+- `.github/pull_request_template.md`
+
+`CHANGELOG.md` is VERIFIED-ONLY. Code that exists but has not been tested must remain pending in `docs/CURRENT_STATE.md`.
+
 ## What is already verified
 - GitHub repository exists and `main` is production source.
 - Cloudflare Worker deployment is live at `https://matrix-year4.msg-ebye.workers.dev/`.
 - Cloudflare D1 `matrix-year4-db` is bound as `DB`.
 - `/api/health` was manually verified with `ok=true`, `database=connected`, `schema=ready`, `tables=6`.
 - Core prototype UI exists for Day 1–Day 8, quizzes, rewards, Buku Silap and Parent Area.
+- AI/developer governance files listed above were confirmed present on GitHub `main`.
 
 ## What changed recently but is still pending full verification
 - Worker persistence APIs were added for state/progress/quiz/stats/mistakes.
@@ -31,6 +50,7 @@ Create a maintainable interactive Year 4 learning PWA from the existing Day 1–
    - `https://matrix.0com.my/`
    - `https://matrix.0com.my/api/health`
 4. Record custom-domain success in `CHANGELOG.md` only after both tests pass.
+5. Then verify persistence endpoints one at a time before wiring frontend state to D1.
 
 ## Handoff completion template
 At the end of any meaningful AI development session, replace/add a short section containing:

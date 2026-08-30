@@ -39,6 +39,16 @@ This document separates verified facts from pending/unverified work. Update it w
 
 ## PENDING / NOT YET VERIFIED
 
+### Student registration / authentication
+- Registration/authentication is NOT implemented yet.
+- Planned child-first registration does not require child email or phone.
+- Planned identity is: display name + generated `student_code` + 6-digit student PIN.
+- Planned Parent Area uses a separate parent/admin PIN and parent recovery code.
+- Plain PINs must never be stored; only salted derived hashes and secure session-token hashes should be persisted.
+- Planned cross-device login uses `student_code + PIN`, while trusted devices may retain a secure session.
+- All learning records must continue to use immutable `student_id` as the database key so a PIN reset or display-name change does not lose progress.
+- Rate limiting / temporary lockout must be added before PIN login is considered secure enough for use.
+
 ### Custom domain
 - Intended zone: `0com.my`.
 - Intended app hostname: `matrix.0com.my`.
@@ -60,10 +70,13 @@ This document separates verified facts from pending/unverified work. Update it w
 1. Wait for Cloudflare to mark `0com.my` Active.
 2. Connect `matrix.0com.my` to Worker `matrix-year4`.
 3. Verify app root and `/api/health` on the custom domain.
-4. Test persistence API endpoints one at a time.
-5. Wire frontend state to backend only after API verification.
+4. Implement and verify the child registration/authentication flow before calling D1 sync multi-device ready.
+5. Test persistence API endpoints one at a time.
+6. Wire frontend state to backend only after API verification.
 
 ## Security notes
 - Never commit Cloudflare build tokens, API tokens, OpenAI keys or credentials.
+- Never store student or parent PINs in plaintext.
+- Numeric PIN login requires server-side rate limiting / lockout.
 - The visible name/label of a Cloudflare build token is not a project secret and must not be used as proof of isolation or access scope.
 - Secrets belong in Cloudflare environment/secrets configuration, not the repository.

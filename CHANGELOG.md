@@ -4,6 +4,16 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — live schema v2 + Student ID availability smoke test
+- Cloudflare Workers Build for the authentication/shared-device code completed successfully from `main`.
+- Added a `live-smoke` CI job for `main` that waits for the Worker and checks the real public endpoint.
+- Live `/api/health` returned `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
+- Live `/api/auth/student-id-availability` returned a valid, available normalized CI-generated Student ID.
+
+**Verification:** GitHub Actions `live-smoke` job completed successfully against `https://matrix-year4.msg-ebye.workers.dev`. This verifies the live Worker is running schema v2 and the public Student ID availability lookup can query the migrated D1 schema.
+
+**Scope note:** student/guardian POST registration, PIN login, shared-device isolation and Parent Area linking still require end-to-end runtime testing and remain pending in `docs/CURRENT_STATE.md`.
+
 ### Verified — repository implementation for student auth, shared-device profiles and Parent Area
 - Added learner registration UI using `Nama`, learner-chosen `ID pelajar`, and `PIN / Password` with `6 digit number` guidance.
 - Added automatic Student ID availability checking after typing stops.
@@ -17,9 +27,7 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 - Added `scripts/verify-static.mjs` and `.github/workflows/verify.yml`.
 - Updated project plan, decisions, current state, handoff and README for the chosen-ID direction.
 
-**Verification:** the feature branch static/contract CI passed; the implementation was fast-forwarded into production branch `main` at `fb5f4c024eee7c7e205b9e9037b96e2527a9fa09`; the subsequent `main` GitHub Actions `Verify repository` run also completed successfully. Checks include Worker JavaScript syntax plus frontend/auth/schema/service-worker contracts.
-
-**Scope note:** this verifies repository implementation and CI on `main`. It does **not** yet prove the new Cloudflare build, D1 migration, shared-device isolation or guardian linking end-to-end; those remain PENDING in `docs/CURRENT_STATE.md` until the deployed Worker is tested.
+**Verification:** the feature branch static/contract CI passed; the implementation was fast-forwarded into production branch `main`; subsequent `main` GitHub Actions `Verify repository` runs completed successfully. Checks include Worker JavaScript syntax plus frontend/auth/schema/service-worker contracts.
 
 ### Verified — AI/developer governance documentation
 - Added root `AGENTS.md` with mandatory read-before-edit, verification and handoff rules.
@@ -39,13 +47,13 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 **Verification:** Cloudflare build/deploy completed successfully and the live Worker URL was opened successfully.
 
-### Verified — Cloudflare D1 connection and schema
+### Verified — Cloudflare D1 connection and schema baseline
 - Created D1 database `matrix-year4-db`.
 - Bound D1 to Worker using binding name `DB`.
 - Fixed D1 schema initialization so it runs without the unsupported multi-statement PRAGMA flow.
-- Application schema includes `students`, `daily_progress`, `quiz_attempts`, `mistakes` and `student_stats`.
+- Baseline application schema included `students`, `daily_progress`, `quiz_attempts`, `mistakes` and `student_stats`.
 
-**Verification:** `/api/health` manually returned `ok=true`, `database=connected`, `schema=ready`, `tables=6`.
+**Verification:** earlier `/api/health` manually returned `ok=true`, `database=connected`, `schema=ready`, `tables=6`; schema-v2 verification is recorded separately above.
 
 ## Rules for future entries
 - Do not add a feature just because code was written.

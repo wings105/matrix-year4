@@ -4,15 +4,25 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — Cloudflare zone active and production custom domain configured
+- `0com.my` is active/protected in Cloudflare after the registrar nameserver change.
+- Owner selected `school.0com.my` as the production custom hostname, replacing the earlier planned `matrix.0com.my` hostname.
+- Cloudflare Worker Domains UI shows `school.0com.my` attached to Worker `matrix-year4`, Environment `Production`, Zone `0com.my`.
+- Project plan, current state, decisions and AI handoff were updated so future AI models use `school.0com.my` as the canonical custom hostname.
+
+**Verification:** confirmed from the Cloudflare UI screenshots supplied during setup and the corresponding repository documentation commits.
+
+**Scope note:** this verifies Cloudflare zone/domain configuration, not yet successful HTTPS/PWA/API runtime on `school.0com.my`. Root and `/api/health` runtime checks remain pending in `docs/CURRENT_STATE.md`.
+
 ### Verified — live schema v2 + Student ID availability smoke test
 - Cloudflare Workers Build for the authentication/shared-device code completed successfully from `main`.
 - Added a `live-smoke` CI job for `main` that waits for the Worker and checks the real public endpoint.
 - Live `/api/health` returned `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
 - Live `/api/auth/student-id-availability` returned a valid, available normalized CI-generated Student ID.
 
-**Verification:** GitHub Actions `live-smoke` job completed successfully against `https://matrix-year4.msg-ebye.workers.dev`. This verifies the live Worker is running schema v2 and the public Student ID availability lookup can query the migrated D1 schema.
+**Verification:** GitHub Actions `live-smoke` job completed successfully against `https://matrix-year4.msg-ebye.workers.dev`.
 
-**Scope note:** student/guardian POST registration, PIN login, shared-device isolation and Parent Area linking still require end-to-end runtime testing and remain pending in `docs/CURRENT_STATE.md`.
+**Scope note:** student/guardian POST registration, PIN login, shared-device isolation and Parent Area linking still require end-to-end runtime testing.
 
 ### Verified — repository implementation for student auth, shared-device profiles and Parent Area
 - Added learner registration UI using `Nama`, learner-chosen `ID pelajar`, and `PIN / Password` with `6 digit number` guidance.
@@ -27,7 +37,7 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 - Added `scripts/verify-static.mjs` and `.github/workflows/verify.yml`.
 - Updated project plan, decisions, current state, handoff and README for the chosen-ID direction.
 
-**Verification:** the feature branch static/contract CI passed; the implementation was fast-forwarded into production branch `main`; subsequent `main` GitHub Actions `Verify repository` runs completed successfully. Checks include Worker JavaScript syntax plus frontend/auth/schema/service-worker contracts.
+**Verification:** feature-branch static/contract CI passed; implementation was fast-forwarded into `main`; subsequent `main` verification runs completed successfully.
 
 ### Verified — AI/developer governance documentation
 - Added root `AGENTS.md` with mandatory read-before-edit, verification and handoff rules.

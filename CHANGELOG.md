@@ -4,6 +4,23 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — repository implementation for student auth, shared-device profiles and Parent Area
+- Added learner registration UI using `Nama`, learner-chosen `ID pelajar`, and `PIN / Password` with `6 digit number` guidance.
+- Added automatic Student ID availability checking after typing stops.
+- Added immutable internal student UUID while keeping the chosen public Student ID for login/display.
+- Added PBKDF2-SHA256 PIN derivation with random salts, hashed session tokens, expiry/revocation, and login throttling.
+- Added shared-device learner profile chooser, profile switching, local profile removal and existing-account login.
+- Added separate guardian identity, Parent Code login, guardian-child links, one-time six-digit Link Code, linked-child dashboard, child registration, PIN reset and unlink operations.
+- Added authenticated student progress/quiz/stats/mistake APIs and frontend D1 state wiring.
+- Extended D1 schema/source with guardian, session, link-code and auth-failure structures plus backward-compatible student auth columns.
+- Updated service worker to bypass `/api/*` caching and use network-first navigation.
+- Added `scripts/verify-static.mjs` and `.github/workflows/verify.yml`.
+- Updated project plan, decisions, current state, handoff and README for the chosen-ID direction.
+
+**Verification:** GitHub Actions `Verify repository` completed successfully for branch commit `974fcfbaf66ce6dee0cd0acda11c14754b0f73fe`, checking Worker JavaScript syntax plus frontend/auth/schema/service-worker contracts.
+
+**Scope note:** this verifies the repository implementation and static/contract checks. It does **not** yet prove live Cloudflare registration, D1 migration, shared-device isolation or guardian linking end-to-end; those remain PENDING in `docs/CURRENT_STATE.md` until tested on the deployed Worker.
+
 ### Verified — AI/developer governance documentation
 - Added root `AGENTS.md` with mandatory read-before-edit, verification and handoff rules.
 - Added `CLAUDE.md` and `.github/copilot-instructions.md` so other AI tools are directed to the same repository rules.

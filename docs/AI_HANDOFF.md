@@ -5,9 +5,9 @@ Last updated: 2026-08-30
 Use this as the short operational handoff between AI models/sessions. Read `AGENTS.md` first.
 
 ## Current owner direction
-Student identity/authentication is a core feature.
+The app is now moving from infrastructure/prototype into a real Year 4 learning product. The owner supplied the full Day 1–Day 8 MATRIX preparation PDFs and explicitly asked that the previously planned learning direction be implemented directly inside the learning modules.
 
-Student registration UX:
+Student registration remains:
 - `Nama`
 - learner chooses `ID pelajar`
 - ID availability auto-checks after typing stops
@@ -16,75 +16,71 @@ Student registration UX:
 
 The app must support several learners sharing one phone and a separate Parent Area linked only to explicit children.
 
-The owner has now started testing the real learner dashboard and reported that the mobile layout looks good, but inner learning/module buttons previously felt non-functional or failed to visibly update.
-
 ## Repository implementation on `main`
 - Student-chosen public ID with availability endpoint.
 - Immutable internal UUID for database relations.
-- Six-digit student PIN auth with PBKDF2 + salt.
-- PBKDF2 work factor is 100,000 iterations because production Cloudflare rejected 120,000; repository verification prevents values above 100,000.
+- Six-digit student PIN auth with PBKDF2 + salt, 100,000 iterations for Cloudflare compatibility.
 - Student sessions and login throttling.
 - Shared-device learner chooser and profile switching/removal.
 - Guardian identity, Parent Code + parent PIN.
-- Guardian-child many-to-many model.
-- One-time six-digit child Link Code.
-- Parent linked-child dashboard, child registration, PIN reset and unlink.
+- Guardian-child many-to-many model and one-time six-digit Link Code.
 - Authenticated student progress/quiz/stats/mistake APIs.
 - Frontend uses authenticated D1 state.
 - Service worker avoids caching `/api/*`.
-- Schema v2 migration is live.
-- GitHub Actions provides repository verification plus live Worker/custom-domain smoke tests.
+- Schema v2 is live.
 
-### Learning interaction repair now in source
-- `Mula Misi Day Ini` launches the first incomplete task for the selected Day.
-- Each Day task has `Buka`/`Ulang`.
-- Math/Science/BM/English tasks open the matching practice subject.
-- Generic activities get an explicit completion action.
-- Correct quiz answer can mark the active Day task complete via the existing D1 progress API.
-- Screen navigation scrolls to the top so changing screens is visible on mobile even from a low scroll position.
-- Quiz selection rotates through the small bank instead of randomly returning the same question repeatedly.
-- Reward badges render locked/unlocked from actual progress.
-- `scripts/verify-static.mjs` now checks these interaction contracts.
+### Structured learning content source
+`learning-content.js` is now the structured source for Day 1–Day 8 learning modules. It was derived from the owner's supplied MATRIX Day PDFs and must not be replaced with a generic quiz-only direction without an approved product decision.
 
-## Important product decisions
-- Learner chooses public Student ID; do not generate it automatically. See ADR-012.
-- Production custom hostname is `school.0com.my`. See ADR-015.
-- GitHub/main + Worker + D1 remain the architecture source of truth.
+Current source-module map:
+- Day 1 — `Kenal Tahap Saya`: Math diagnostic, Science diagnostic, BM, English, Buku Silap.
+- Day 2 — `Bahasa & Nombor`: whole numbers, operations, BM comprehension, English vocabulary/grammar/reading, Science quick review, writing.
+- Day 3 — `Malaysia, Sejarah & Sains`: history/patriotism, scientific process skills, Life Science, mixed Math, language work.
+- Day 4 — `Math Power Day`: numbers/operations, fractions-decimals-percent, money-time-measurement, geometry/data, four-step problem solving, Science maintenance.
+- Day 5 — `English + Science DLP`: English vocabulary/grammar/reading/writing plus Humans, Animals, Plants and Scientific Skills.
+- Day 6 — `STEM Investigation Day`: Light, Sound, Energy, Materials, absorbency fair test, Math measurement/money/time, experiment writing, DLP translation.
+- Day 7 — `Akhlak, Keluarga & Consolidation`: Math/Science topik merah, BM/English consolidation, History/RBT, family/reflection.
+- Day 8 — `Mini MATRIX Exam + Back to School`: final Math/Science, BM/English, topik merah action plan, 8-day reflection, back-to-school checklist.
 
-## Verified live production state
-- Cloudflare Worker build succeeds from `main`.
-- Live `/api/health` returned `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
-- Live Student ID availability endpoint returned valid/available/normalized output.
-- `0com.my` Cloudflare zone is active.
-- `school.0com.my` is attached to Worker `matrix-year4` in Production.
-- Human browser + Android screenshots confirmed the PWA, installed icon and standalone launch.
-- Mobile dashboard layout was polished and the owner confirmed the layout looked good.
-- First real registration exposed the Cloudflare PBKDF2 100,000 limit; source was corrected.
-- After correction, a real learner registration succeeded and the app entered the authenticated learner dashboard, proving registration + immediate student-state load in production.
+Traffic-light policy in learning source:
+- HIJAU: 80–100
+- KUNING: 60–79
+- MERAH: below 60
+
+The learning UI now renders `Modul Pembelajaran Day X`, and `Mula Misi Day Ini` prefers the first incomplete structured module. Objective modules use source-specific questions; activity/writing/STEM/reflection modules can be explicitly marked complete. Completion uses existing `/api/student/progress` with `module-<module-id>` keys.
+
+`scripts/verify-static.mjs` permanently guards the Day 1–Day 8 definitions, key module IDs, source script integration and traffic-light thresholds.
+
+## Verified production state
+- Cloudflare Worker / D1 schema v2 remains healthy (`schemaVersion=2`, 11 tables in prior live smoke).
+- `school.0com.my` is the production custom domain.
+- Android PWA is installed and launches standalone.
+- Real learner registration succeeds and enters authenticated cloud-backed dashboard.
+- Mobile dashboard layout was polished and owner confirmed it looks good.
+- Source-based Day 1–Day 8 integration workflow passed repository/static checks.
+- Cloudflare Workers Build succeeded for source-module commit `e851e0c21c585d540f0b66939b849c68356f58d3`, version `434f0ea4-790e-4400-a40c-09a2166b5b6b`.
 
 ## Still NOT fully verified
 Do not claim these complete until manually/runtime tested:
-1. Fresh logout/login with the same six-digit PIN.
-2. Duplicate ID and wrong-PIN/lockout behaviour.
-3. The newly repaired Day/module interactions on the actual phone.
-4. Checklist/quiz/XP/Buku Silap persistence after reload.
-5. Two learners on one shared device with data isolation.
-6. Guardian registration + Link Code + linked-child isolation.
-7. Parent Area controls such as child PIN reset/unlink.
+1. New `Modul Pembelajaran Day X` UI on the actual installed phone.
+2. Day switching changes the structured module library correctly.
+3. Correct source-module answer updates XP and `module-*` progress in D1.
+4. Wrong source-module answer enters `Buku Silap Saya`.
+5. Activity module completion survives reload.
+6. Day 4 Math Power, Day 6 STEM and Day 8 Mini MATRIX phone flows.
+7. Fresh logout/login with same PIN; duplicate ID; wrong-PIN/lockout.
+8. Two learners on one shared device with data isolation.
+9. Guardian registration + child linking + Parent Area controls.
 
 ## Exact next safe step
 Human action required next:
-1. Relaunch the installed PWA after the current deployment finishes.
-2. On Day 1 press `Mula Misi Day Ini` or `Buka` on `Mathematics Diagnostic DLP`.
-3. Confirm it opens the learning module at the top of the screen.
-4. Answer one correct question and confirm XP + Day task/progress visibly update.
-5. Then answer one question incorrectly and confirm it appears in `Buku Silap Saya`.
+1. Relaunch the installed PWA after the latest deployment/cache refresh.
+2. Select Day 1 and open `Belajar`.
+3. Confirm `Modul Pembelajaran Day 1` is visible with separate source modules such as `Mathematics DLP — Diagnostic` and `Science DLP — Diagnostic`.
+4. Open the Mathematics diagnostic module and answer one question.
+5. Capture the result so XP/module progress + Buku Silap behaviour can be verified before further runtime claims.
 
-After those are proven:
-- update `CHANGELOG.md` for module/progress behaviour,
-- test logout/login,
-- add second learner and test isolation,
-- test Parent Area linking.
+After that, test Day 4, Day 6 and Day 8 module libraries, then continue auth/shared-device/Parent Area verification.
 
 ## Handoff completion template
 - Request:

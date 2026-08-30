@@ -17,6 +17,8 @@ This document separates verified repository/configuration facts from pending run
 - Student ID availability auto-checks after typing stops.
 - Public Student ID is separate from immutable internal student UUID.
 - PINs use PBKDF2-SHA256 with random per-user salt; plain PINs are not stored.
+- PBKDF2 now uses 100,000 iterations, matching the Cloudflare Workers Web Crypto limit observed in production.
+- Static verification fails if a PBKDF2 iteration count above 100,000 is reintroduced.
 - Student and guardian bearer sessions are stored server-side as token hashes with expiry/revocation.
 - Five failed logins in the same actor-code/IP scope cause a 10-minute lockout.
 - Shared-device learner chooser, switching and local-only profile removal exist.
@@ -33,6 +35,16 @@ This document separates verified repository/configuration facts from pending run
 - Live `/api/health` returned `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
 - Existing production D1 accepted the schema-v2 migration path.
 - Live Student ID availability endpoint returned valid/available/normalized output for a CI-generated ID.
+
+### PBKDF2 compatibility correction
+- First real student registration attempt reached the Worker but failed before D1 insert with: `Pbkdf2 failed: iteration counts above 100000 are not supported (requested 120000)`.
+- Worker PBKDF2 work factor was changed from 120,000 to 100,000 iterations.
+- `scripts/verify-static.mjs` now enforces the Cloudflare-compatible maximum and expected 100,000 work factor.
+- GitHub repository verification passed after the correction.
+- GitHub live-smoke passed after the correction.
+- Cloudflare Workers Build completed successfully for commit `64f1e19350b616ca4d16e748e9846fa59c6c666b`, deploying Worker version `bbf5eaa1-5b31-4469-b3a6-a4cbadc0f040`.
+
+**Important:** deployment of the correction is verified; a successful student registration POST is still awaiting the next human retry and must not yet be claimed.
 
 ### Cloudflare zone and production custom domain
 - `0com.my` nameservers were changed at the registrar to Cloudflare nameservers.
@@ -51,7 +63,9 @@ This document separates verified repository/configuration facts from pending run
 ## PENDING / NOT YET FULLY VERIFIED END-TO-END
 
 ### Student registration / login writes
-Need production proof for POST/session behaviour:
+The earlier first registration attempt failed specifically because the Worker rejected 120,000 PBKDF2 iterations. The 100,000-iteration correction is now deployed, but the registration POST must be retried.
+
+Need production proof for:
 - new chosen ID persists uniquely,
 - six-digit PIN registration/login works,
 - expected student + stats rows are created,
@@ -81,12 +95,13 @@ Need runtime proof for:
 Need real authenticated end-to-end tests for checklist, quiz/mistakes, XP/stars, DLP language, mistake mastery, reload and cross-device persistence.
 
 ## Known next safe steps
-1. Register one learner using name + chosen available Student ID + six-digit PIN.
-2. Verify logout/login and cloud state persistence.
-3. Add a second learner and test shared-device isolation.
-4. Test Parent Area registration/linking.
-5. Verify checklist/quiz/stats/mistake persistence through a real learner session.
-6. Record only behaviours actually proven in `CHANGELOG.md`.
+1. Retry the same learner registration on `school.0com.my` after refreshing/relaunching the installed PWA.
+2. Confirm a recovery code/dashboard appears and no PBKDF2 error is shown.
+3. Verify logout/login and cloud state persistence.
+4. Add a second learner and test shared-device isolation.
+5. Test Parent Area registration/linking.
+6. Verify checklist/quiz/stats/mistake persistence through a real learner session.
+7. Record only behaviours actually proven in `CHANGELOG.md`.
 
 ## Security notes
 - Never commit Cloudflare/API tokens, credentials, PINs or recovery codes.

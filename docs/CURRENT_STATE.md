@@ -2,101 +2,116 @@
 
 Last updated: 2026-08-30
 
-This document separates verified facts from pending/unverified work. Update it whenever meaningful state changes.
+This document separates verified repository facts from production/runtime verification. Do not call a feature shipped merely because source code exists.
 
 ## VERIFIED
 
-### Repository
+### Repository / governance
 - Repository: `wings105/matrix-year4`.
 - Production branch: `main`.
-- Repository contains the PWA frontend, Worker source, Wrangler config and D1 schema.
+- `AGENTS.md` is the mandatory AI/developer entry point.
+- Project roadmap, decisions, current state, changelog and handoff documents exist.
 
-### Cloudflare deployment
-- Current live Worker URL: `https://matrix-year4.msg-ebye.workers.dev/`.
-- Static frontend has been successfully deployed through Cloudflare Workers.
-- Worker API is reachable.
+### Previously verified Cloudflare / D1 baseline
+- Worker URL: `https://matrix-year4.msg-ebye.workers.dev/`.
+- D1 database: `matrix-year4-db`.
+- D1 binding: `DB`.
+- Before the authentication expansion, `/api/health` was manually verified with database connected and schema ready.
+- Custom domain `matrix.0com.my` is still waiting on `0com.my` Cloudflare zone activation/nameserver propagation.
 
-### D1
-- Database name: `matrix-year4-db`.
-- Worker binding: `DB`.
-- `/api/health` has been manually verified returning:
-  - `ok: true`
-  - `database: connected`
-  - `schema: ready`
-  - `tables: 6`
-- Repository schema defines the application tables:
-  - `students`
-  - `daily_progress`
-  - `quiz_attempts`
-  - `mistakes`
-  - `student_stats`
+### Authentication/shared-device implementation exists in repository
+The current source now contains:
+- learner registration form: name + learner-chosen Student ID + six-digit PIN,
+- debounced Student ID availability API/check,
+- immutable internal student UUID separate from chosen public Student ID,
+- PBKDF2-SHA256 PIN derivation with random salts,
+- one-time recovery code hashing,
+- student login/logout/session API,
+- guardian registration/login/session API,
+- server-side failed-login tracking and 10-minute lockout after five failures,
+- shared-device remembered learner profile chooser,
+- separate remembered Parent profiles,
+- session-scoped active bearer token,
+- guardian-child many-to-many linking,
+- six-digit one-time parent Link Code,
+- parent child-registration, linked-child list, child PIN reset and unlink operations,
+- authenticated student checklist/quiz/stats/mistake state flow,
+- manual legacy checklist import,
+- service-worker API cache bypass and network-first navigation,
+- repository verification script and GitHub Actions verification workflow.
 
-### PWA prototype
-- Day 1–Day 8 planner/checklist UI exists.
-- Mathematics DLP, Science DLP, BM and English quiz prototype exists.
-- XP, stars, streak, Buku Silap Saya and Parent Area UI exist.
-- Prototype still has browser/local state behaviour in the frontend.
+Repository/source existence is verified only after the branch is merged to `main`; production behaviour must still be tested separately.
 
-## PENDING / NOT YET VERIFIED
+## PENDING / NOT YET VERIFIED IN PRODUCTION
 
-### Student registration / authentication
-- Registration/authentication is NOT implemented yet.
-- Planned child-first registration does not require child email or phone.
-- Planned identity is: display name + generated `student_code` + 6-digit student PIN.
-- Plain PINs must never be stored; only salted derived hashes and secure session-token hashes should be persisted.
-- Planned cross-device login uses `student_code + PIN`, while trusted devices may retain a secure session.
-- All learning records must continue to use immutable `student_id` as the database key so a PIN reset or display-name change does not lose progress.
-- Rate limiting / temporary lockout must be added before PIN login is considered secure enough for use.
+### New D1 auth schema migration
+Source intends to add/migrate:
+- `students.student_code`
+- `students.pin_hash`
+- `students.pin_salt`
+- `students.recovery_hash`
+- `guardians`
+- `guardian_students`
+- `sessions`
+- `link_codes`
+- `auth_failures`
+- supporting indexes
+
+Must verify against the real existing D1 database before marking complete.
+
+### Student registration / login
+Need production proof for:
+- ID availability responds correctly,
+- new chosen ID is persisted uniquely,
+- six-digit PIN registration/login works,
+- duplicate ID is rejected,
+- wrong PIN increments failure tracking,
+- lockout activates and later clears,
+- logout/revocation works.
 
 ### Shared-device profile switching
-- Multi-profile shared-device support is PLANNED, not implemented.
-- One phone/tablet/browser should be able to remember multiple independent learner profiles.
-- Planned profile chooser: `Siapa yang belajar sekarang?` with learner cards, `+ Tambah Pelajar`, and `Parent Area`.
-- Switching learners must create/scope the active session to exactly one `student_id` and prevent progress mixing.
-- Removing a learner from a device must only forget that local/device profile; it must not delete D1 history.
-- A sibling/friend using the same device does not create any guardian relationship automatically.
+Need manual test with at least two students on the same browser/device:
+- select profile -> PIN -> correct student state,
+- switch user -> prior session locked,
+- second student's records remain separate,
+- remove profile locally does not delete D1 data.
 
-### Parent / guardian portal linking
-- Parent/guardian account model is PLANNED, not implemented.
-- Guardian identity must be separate from student identity (`guardian_id` vs `student_id`).
-- Planned first-release guardian login: generated `parent_code` + parent PIN/passcode, with optional phone/email later for recovery/notifications.
-- Planned many-to-many guardian-child link means one guardian can manage multiple children and one child can later have multiple guardians.
-- Child created inside Parent Area may be linked automatically.
-- Existing child accounts require explicit one-time approval/link code before a parent can see their data.
-- Parent Area must show only explicitly linked children, not every learner remembered on the same phone.
-- Unlinking a guardian must remove access only, without deleting student progress.
+### Parent / guardian portal
+Need production proof for:
+- guardian registration/login,
+- Parent Code return,
+- Link Code generation/expiry/one-time use,
+- guardian sees only linked children,
+- parent-created child auto-links,
+- child PIN reset revokes child sessions,
+- unlink preserves student progress.
 
-### Custom domain
-- Intended zone: `0com.my`.
-- Intended app hostname: `matrix.0com.my`.
-- Exabytes nameservers were changed to Cloudflare assigned nameservers.
-- Cloudflare zone activation is waiting for nameserver propagation.
-- Worker has NOT yet been verified on `matrix.0com.my`.
+### Persistent learning state
+Frontend source now uses authenticated D1 APIs, but end-to-end verification is still required for:
+- checklist write/read,
+- quiz attempt + wrong-answer mistake,
+- XP/stars update,
+- DLP language update,
+- mistake mastered state,
+- reload/cross-device persistence.
 
-### Backend persistence
-- Worker source contains persistence API work for student state/progress/quiz/stats/mistakes.
-- These endpoints have NOT yet been fully end-to-end verified in production.
-- Frontend has NOT yet been verified as synchronized to D1.
-- Do not state cross-device sync is complete until manually tested.
-
-### PWA cache change
-- Service worker source has been updated so `/api/*` requests should bypass static cache.
-- This behaviour still requires a clean production/browser verification after the latest deployment.
+### PWA cache
+Service-worker source now bypasses `/api/*` and uses network-first navigation. Verify on a real browser after deploy/update.
 
 ## Known next safe steps
-1. Wait for Cloudflare to mark `0com.my` Active.
-2. Connect `matrix.0com.my` to Worker `matrix-year4`.
-3. Verify app root and `/api/health` on the custom domain.
-4. Design/extend D1 auth schema for students, guardians, sessions and guardian-child links.
-5. Implement and verify child registration/authentication and shared-device profile switching.
-6. Implement and verify guardian login/linking before exposing real Parent Area records.
-7. Test persistence API endpoints one at a time.
-8. Wire frontend state to backend only after API verification.
+1. Merge the completed auth/shared-device implementation to `main`.
+2. Wait for Cloudflare Git deployment to finish.
+3. Verify `/api/health` reports the new schema version.
+4. Verify Student ID availability GET endpoint.
+5. Manually register a test student through the UI and confirm login/state.
+6. Test two learner profiles on one device.
+7. Register a guardian, generate child Link Code, link child and confirm dashboard isolation.
+8. Only then move these runtime items into `CHANGELOG.md` as fully verified features.
+9. Separately continue `0com.my` activation and connect `matrix.0com.my`.
 
 ## Security notes
 - Never commit Cloudflare build tokens, API tokens, OpenAI keys or credentials.
-- Never store student or parent PINs in plaintext.
-- Numeric PIN login requires server-side rate limiting / lockout.
+- Never store student/parent PINs or recovery codes in plaintext.
+- Public Student ID is login identity, not database ownership key.
 - Same-device presence is never sufficient evidence of guardianship.
-- The visible name/label of a Cloudflare build token is not a project secret and must not be used as proof of isolation or access scope.
-- Secrets belong in Cloudflare environment/secrets configuration, not the repository.
+- Raw remembered profile metadata must not contain bearer tokens.

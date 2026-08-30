@@ -29,9 +29,29 @@ Build a mobile-first, child-friendly Year 4 learning PWA that turns the existing
 - [ ] Connect custom subdomain `matrix.0com.my` to Worker.
 - [ ] Verify HTTPS, PWA loading and API health on custom domain.
 
+### Phase B0 — Student identity and registration
+Planned onboarding must work for a child who has no phone number and no email address.
+
+Recommended first-release flow:
+- [ ] First launch shows `Daftar Pelajar` / `Log Masuk` instead of requiring email or phone.
+- [ ] Parent creates the child profile using the child's display name.
+- [ ] Backend creates an internal immutable `student_id` plus a human-friendly generated `student_code` for future device login.
+- [ ] Child chooses a 6-digit student PIN. The plain PIN must never be stored in D1.
+- [ ] Parent chooses a separate parent/admin PIN for Parent Area and PIN reset authority.
+- [ ] Generate a one-time recovery code for the parent; email/phone recovery can remain optional later.
+- [ ] On the original trusted device, persist a secure session so the child normally taps the profile and enters only the PIN (or can stay signed in according to parent preference).
+- [ ] On a new device, login uses `student_code + student PIN`, or a future parent-approved pairing flow.
+- [ ] Add server-side login rate limiting / temporary lockout because a numeric PIN has low entropy.
+- [ ] Store only salted password/PIN derivations (for example PBKDF2 via Web Crypto) and session-token hashes; never plain PINs or raw session tokens.
+- [ ] Every learning record is keyed by `student_id`, so checklist, quiz attempts, mistakes, XP, stars, streak and mastery sync to the same D1 profile across devices.
+- [ ] Parent can reset the student's PIN without deleting learning history.
+
+Email and phone are intentionally optional for the child. They may be added later only for parent recovery/notifications, not as a prerequisite to learn.
+
 ### Phase B — Persistent learning state
 - [x] Backend data model exists for students, progress, quiz attempts, mistakes and stats.
 - [x] Worker API implementation exists in source for persisted state operations.
+- [ ] Extend D1 schema for `student_code`, PIN/auth metadata and sessions without breaking existing learning tables.
 - [ ] Verify each persistence API endpoint in production.
 - [ ] Wire frontend checklist to D1 instead of browser-only storage.
 - [ ] Wire quiz attempts and mistakes to D1.
@@ -69,12 +89,14 @@ AI features must not be added before the core learning records and verification 
 - Native Play Store APK is not required for the first usable release.
 - Multi-school / commercial SaaS is not the current priority.
 - Do not add another backend platform while Cloudflare Workers + D1 meets the project needs.
+- Child email address or phone number is not required for first-release registration.
 
 ## Definition of a usable first release
 A first usable release is achieved when:
 1. `matrix.0com.my` loads reliably on phone and desktop.
-2. Student can complete Day 1–Day 8 checklist and quizzes.
-3. Progress, quiz results, mistakes and stats persist in D1.
-4. Parent view can read the same persisted progress.
-5. PWA can be installed on Android Home Screen.
-6. Core flows have been manually verified and recorded in `CHANGELOG.md`.
+2. Student can register/login without requiring phone or email.
+3. Student can complete Day 1–Day 8 checklist and quizzes.
+4. Progress, quiz results, mistakes and stats persist in D1 under the same `student_id`.
+5. Parent view can read the same persisted progress and reset the child PIN safely.
+6. PWA can be installed on Android Home Screen.
+7. Core flows have been manually verified and recorded in `CHANGELOG.md`.

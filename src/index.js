@@ -206,7 +206,7 @@ async function derivePin(pin, salt) {
     name: 'PBKDF2',
     hash: 'SHA-256',
     salt: base64UrlToBytes(salt),
-    iterations: 120000,
+    iterations: 100000,
   }, key, 256);
   return bytesToBase64Url(new Uint8Array(bits));
 }

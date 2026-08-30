@@ -41,15 +41,14 @@ This document separates verified repository/configuration facts from pending run
 - Cloudflare Worker Domains UI shows `school.0com.my` attached to Worker `matrix-year4`, Environment `Production`, Zone `0com.my`.
 - Human browser verification confirmed `https://school.0com.my/` resolves over HTTPS and renders the current MATRIX Tahun 4 learner/Parent Area UI.
 - GitHub Actions live smoke verification against `school.0com.my` succeeded: root HTML contains `MATRIX Tahun 4` and `/api/health` returns connected/ready schema v2 with 11 tables.
-- Future `main` pushes now re-check the production custom-domain root and health endpoint automatically.
+- Future `main` pushes re-check the production custom-domain root and health endpoint automatically.
+
+### Android mobile / PWA install
+- Human phone screenshots confirm `school.0com.my` renders correctly in the mobile layout.
+- PWA is installed on the Android Home Screen and appears with the MATRIX app icon.
+- The installed app launches in standalone-style mobile presentation without the normal browser address bar.
 
 ## PENDING / NOT YET FULLY VERIFIED END-TO-END
-
-### Phone / PWA install
-Need a real phone test for:
-- `https://school.0com.my/` on mobile browser,
-- Add to Home Screen / PWA installation,
-- installed-app launch and normal navigation.
 
 ### Student registration / login writes
 Need production proof for POST/session behaviour:
@@ -82,11 +81,11 @@ Need runtime proof for:
 Need real authenticated end-to-end tests for checklist, quiz/mistakes, XP/stars, DLP language, mistake mastery, reload and cross-device persistence.
 
 ## Known next safe steps
-1. Open `https://school.0com.my/` on the intended phone and verify the mobile/PWA install path.
-2. Register one learner using name + chosen available Student ID + six-digit PIN.
-3. Verify logout/login and cloud state persistence.
-4. Add a second learner and test shared-device isolation.
-5. Test Parent Area linking.
+1. Register one learner using name + chosen available Student ID + six-digit PIN.
+2. Verify logout/login and cloud state persistence.
+3. Add a second learner and test shared-device isolation.
+4. Test Parent Area registration/linking.
+5. Verify checklist/quiz/stats/mistake persistence through a real learner session.
 6. Record only behaviours actually proven in `CHANGELOG.md`.
 
 ## Security notes

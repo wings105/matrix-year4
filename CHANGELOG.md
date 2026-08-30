@@ -4,6 +4,15 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — Android PWA install and mobile launch
+- `school.0com.my` renders correctly on the Android mobile layout.
+- The MATRIX PWA was added to the Android Home Screen and appears with its app icon.
+- The installed app launches in standalone-style presentation without the normal browser address bar.
+
+**Verification:** human phone screenshots supplied during setup show the mobile app UI and the MATRIX app icon installed on the Android Home Screen.
+
+**Scope note:** learner registration/login, shared-device data isolation, Parent Area linking and authenticated learning-state persistence still require end-to-end manual verification.
+
 ### Verified — `school.0com.my` production runtime
 - `https://school.0com.my/` resolves over HTTPS and renders the current MATRIX Tahun 4 learner/profile + Parent Area UI.
 - Added a permanent GitHub Actions live-smoke check for the production custom domain.
@@ -11,8 +20,6 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 - Automated custom-domain `/api/health` verifies `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
 
 **Verification:** human browser screenshot confirmed the production root UI; GitHub Actions run `33306184937` completed successfully after checking both `school.0com.my/` and `school.0com.my/api/health`.
-
-**Scope note:** Android/PWA installation, learner registration/login, shared-device isolation and Parent Area linking still require end-to-end manual verification.
 
 ### Verified — Cloudflare zone active and production custom domain configured
 - `0com.my` is active/protected in Cloudflare after the registrar nameserver change.
@@ -29,8 +36,6 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 - Live `/api/auth/student-id-availability` returned a valid, available normalized CI-generated Student ID.
 
 **Verification:** GitHub Actions `live-smoke` job completed successfully against `https://matrix-year4.msg-ebye.workers.dev`.
-
-**Scope note:** student/guardian POST registration, PIN login, shared-device isolation and Parent Area linking still require end-to-end runtime testing.
 
 ### Verified — repository implementation for student auth, shared-device profiles and Parent Area
 - Added learner registration UI using `Nama`, learner-chosen `ID pelajar`, and `PIN / Password` with `6 digit number` guidance.

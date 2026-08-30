@@ -43,26 +43,25 @@ The app must support several learners sharing one phone and a separate Parent Ar
 - `0com.my` Cloudflare zone is active.
 - Cloudflare Domains UI shows `school.0com.my` attached to Worker `matrix-year4` in Production.
 - Human browser screenshot confirms `https://school.0com.my/` loads the current MATRIX Tahun 4 profile/registration UI over HTTPS.
-- GitHub Actions live smoke test confirms `school.0com.my` root returns the expected app and `school.0com.my/api/health` returns connected/ready schema v2 with 11 tables.
+- GitHub Actions live smoke confirms `school.0com.my` root and `/api/health` are healthy.
+- Human Android screenshots confirm the mobile layout, installed PWA icon on the Home Screen, and installed-app launch in standalone-style presentation.
 
 ## Still NOT fully verified
 Do not claim these complete until manually/runtime tested:
-1. Phone/PWA install and launch from `school.0com.my`.
-2. Register a learner and confirm D1 rows/session.
-3. Logout/login with six-digit PIN.
-4. Duplicate ID and wrong-PIN/lockout behaviour.
-5. Two learners on one shared device with data isolation.
-6. Guardian registration + Link Code + linked-child isolation.
-7. Checklist/quiz/stats/mistake persistence through real learner sessions.
+1. Register a learner and confirm D1 rows/session.
+2. Logout/login with six-digit PIN.
+3. Duplicate ID and wrong-PIN/lockout behaviour.
+4. Two learners on one shared device with data isolation.
+5. Guardian registration + Link Code + linked-child isolation.
+6. Checklist/quiz/stats/mistake persistence through real learner sessions.
 
 ## Exact next safe step
 Human action required next:
-1. Open `https://school.0com.my/` on the intended phone.
-2. Verify the mobile view and PWA/Add to Home Screen option.
-3. Then begin one real learner registration using name + chosen available Student ID + six-digit PIN.
+1. Register one learner on `school.0com.my` using `Nama` + chosen available `ID pelajar` + six-digit PIN.
+2. Confirm registration result/recovery code and the learner dashboard.
+3. Then verify logout/login and persistence before adding a second learner.
 
 After that:
-- test logout/login and persistence,
 - add a second learner on the same device,
 - test Parent Area linking,
 - update `CHANGELOG.md` only for behaviours actually proven.

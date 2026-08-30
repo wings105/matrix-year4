@@ -1,7 +1,18 @@
 {
   "name": "matrix-year4",
+  "main": "src/index.js",
   "compatibility_date": "2026-08-30",
   "assets": {
-    "directory": "."
-  }
+    "directory": ".",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "matrix-year4-db",
+      "database_id": "bc3ff819-723f-4c69-ada8-1317cdf5e23d"
+    }
+  ]
 }

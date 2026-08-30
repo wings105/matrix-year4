@@ -4,6 +4,21 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — real learner registration reaches authenticated dashboard
+- After the PBKDF2 work factor correction, a real learner registration succeeded in the installed Android PWA.
+- The learner dashboard opened with the registered learner name, Day 1 content and cloud-loaded starting state.
+- This proves the registration POST and immediate authenticated `/api/student/state` path work together in production after the PBKDF2 fix.
+
+**Verification:** human phone screenshot showed the authenticated learner dashboard immediately after retrying registration, with the owner confirming the learner could enter the app.
+
+**Scope note:** fresh logout/login, duplicate-ID conflict, wrong-PIN throttling and multi-profile isolation still require separate runtime verification.
+
+### Verified — mobile dashboard layout polish
+- Mobile dashboard spacing and card layout were tightened for narrow screens.
+- Progress metrics, Day cards, checklist rows, Quick Start subject rows and bottom navigation were adjusted to fit the phone viewport more cleanly.
+
+**Verification:** after the updated build reached the installed PWA, the owner confirmed the mobile layout looked good.
+
 ### Verified — Cloudflare PBKDF2 compatibility correction deployed
 - The first real learner registration attempt exposed a production runtime limit: Cloudflare rejected PBKDF2 with `requested 120000` because iteration counts above 100,000 are unsupported in this Worker environment.
 - Changed the PIN derivation work factor from 120,000 to 100,000 PBKDF2-SHA256 iterations.
@@ -14,16 +29,12 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 **Verification:** GitHub Actions `verify` and `live-smoke` completed successfully and Cloudflare's Worker build check completed with conclusion `success` for the corrected source.
 
-**Scope note:** this verifies that the compatibility correction is in production. A successful learner registration POST is not yet verified; the human must retry registration before that behaviour can be marked complete.
-
 ### Verified — Android PWA install and mobile launch
 - `school.0com.my` renders correctly on the Android mobile layout.
 - The MATRIX PWA was added to the Android Home Screen and appears with its app icon.
 - The installed app launches in standalone-style presentation without the normal browser address bar.
 
 **Verification:** human phone screenshots supplied during setup show the mobile app UI and the MATRIX app icon installed on the Android Home Screen.
-
-**Scope note:** learner registration/login, shared-device data isolation, Parent Area linking and authenticated learning-state persistence still require end-to-end manual verification.
 
 ### Verified — `school.0com.my` production runtime
 - `https://school.0com.my/` resolves over HTTPS and renders the current MATRIX Tahun 4 learner/profile + Parent Area UI.

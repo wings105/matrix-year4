@@ -7,50 +7,445 @@
 <link rel="manifest" href="/manifest.json">
 <title>MATRIX Tahun 4</title>
 <style>
-:root{--blue:#0d4fb8;--purple:#6946df;--sky:#eef8ff;--ink:#16264a;--muted:#6f7d99;--line:#dce7f5;--green:#19a866;--yellow:#f5b82e;--red:#e95656;--card:#fff;--r:20px}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(180deg,#eaf7ff,#f7fbff);color:var(--ink)}button,input,textarea{font:inherit}.app{min-height:100vh;display:grid;grid-template-columns:230px 1fr}.side{background:linear-gradient(180deg,#082d69,#0c448f);color:#fff;padding:22px 15px;position:sticky;top:0;height:100vh}.brand{font-size:24px;font-weight:900;margin:4px 8px 24px}.brand small{display:block;font-size:11px;color:#bfe0ff;margin-top:3px}.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;color:#eaf4ff;padding:12px 13px;border-radius:13px;text-align:left;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:linear-gradient(135deg,#8157ee,#5a37d6);color:#fff}.sidebox{margin-top:20px;padding:14px;border-radius:16px;background:#ffffff16;border:1px solid #ffffff20;font-size:13px}.main{padding:22px;min-width:0}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}.top h1{font-size:27px;margin:0}.muted{color:var(--muted)}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-weight:800;box-shadow:0 5px 16px #284f8210}.hero{background:linear-gradient(125deg,#1267dc,#4e8be8 58%,#79d2ff);color:#fff;padding:26px;border-radius:26px;display:grid;grid-template-columns:1.4fr .6fr;align-items:center;box-shadow:0 14px 34px #1b5ea52b}.hero h2{font-size:34px;margin:0 0 7px}.hero p{margin:0 0 17px;max-width:650px}.mascot{font-size:88px;text-align:center;filter:drop-shadow(0 8px 10px #0002)}.btn{border:0;border-radius:13px;padding:11px 15px;font-weight:900;cursor:pointer}.primary{background:#ffd04a;color:#20325c}.soft{background:#eef4ff;color:#234eaa}.green{background:var(--green);color:#fff}.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}.metric,.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:0 8px 26px #1f53820d}.metric{padding:14px}.metric small{color:var(--muted);font-weight:800}.metric b{display:block;font-size:22px;margin-top:3px}.layout{display:grid;grid-template-columns:1.15fr 1fr .85fr;gap:14px;margin-top:18px}.panel{padding:17px}.panel h3{margin:0 0 12px}.days{display:flex;gap:7px;overflow:auto;padding-bottom:5px}.day{min-width:47px;height:47px;border-radius:50%;border:1px solid var(--line);background:#f8fbff;font-weight:900;color:#596b8d}.day.current{background:var(--purple);color:#fff;border:4px solid #ded4ff}.day.done{background:var(--green);color:#fff}.theme{margin:12px 0;padding:12px;border-radius:14px;background:linear-gradient(135deg,#fff4d8,#f2ecff)}.task{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}.task:last-child{border-bottom:0}.task input{width:19px;height:19px;accent-color:var(--green)}.task b{display:block}.task small{color:var(--muted)}.tag{font-size:11px;border-radius:999px;padding:4px 7px;background:#eef4ff;color:#2c5fb3;font-weight:900}.subject{display:flex;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.subject .ico{font-size:28px}.subject .grow{flex:1}.bar{height:8px;background:#e9eef7;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#23b479,#54c6ff);border-radius:inherit}.topic{display:flex;align-items:center;gap:8px;padding:9px;border-bottom:1px solid #eef2f7}.dot{width:10px;height:10px;border-radius:50%}.red{background:var(--red)}.amber{background:var(--yellow)}.good{background:var(--green)}.screen{display:none}.screen.active{display:block}.quizq{font-size:20px;font-weight:900;margin:14px 0}.answers{display:grid;gap:8px}.answers button{text-align:left;border:1px solid var(--line);border-radius:13px;background:#fff;padding:12px;cursor:pointer}.answers button:hover{background:#eef6ff}.big{font-size:34px;font-weight:950}.textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:14px;padding:12px;resize:vertical}.parent-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.lock{max-width:420px;margin:50px auto;text-align:center}.lock input{width:150px;text-align:center;font-size:25px;padding:10px;border:2px solid var(--line);border-radius:12px}.toast{position:fixed;right:18px;bottom:18px;background:#102859;color:#fff;padding:12px 16px;border-radius:13px;opacity:0;transform:translateY(20px);transition:.25s}.toast.show{opacity:1;transform:none}@media(max-width:1000px){.layout{grid-template-columns:1fr 1fr}.layout>.panel:last-child{grid-column:1/-1}.grid5{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){.app{grid-template-columns:1fr}.side{position:fixed;z-index:20;left:0;right:0;bottom:0;top:auto;height:auto;padding:7px;background:#0b3675}.brand,.sidebox{display:none}.nav{grid-template-columns:repeat(6,1fr);gap:3px}.nav button{font-size:0;text-align:center;padding:10px 5px}.nav button span{font-size:19px}.main{padding:15px 15px 82px}.top{align-items:flex-start}.top h1{font-size:22px}.hero{grid-template-columns:1fr;padding:20px}.hero h2{font-size:29px}.mascot{display:none}.grid5{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.layout>.panel:last-child{grid-column:auto}.parent-grid{grid-template-columns:1fr}.chips{justify-content:flex-end}.chip.hide-mobile{display:none}}
+:root{--blue:#0d4fb8;--blue2:#1767d8;--purple:#6946df;--ink:#16264a;--muted:#6f7d99;--line:#dce7f5;--green:#18a866;--yellow:#f3b72e;--red:#df5050;--card:#fff;--bg:#f4f9ff;--r:20px}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(180deg,#eaf7ff,var(--bg));color:var(--ink)}
+button,input,select{font:inherit}.hidden{display:none!important}.muted{color:var(--muted)}.error{color:#b52b2b}.success{color:#138553}.warning{color:#996000}
+.btn{border:0;border-radius:13px;padding:11px 15px;font-weight:900;cursor:pointer}.btn:disabled{opacity:.5;cursor:not-allowed}.primary{background:#ffd04a;color:#20325c}.blue{background:var(--blue);color:#fff}.soft{background:#eef4ff;color:#234eaa}.green{background:var(--green);color:#fff}.danger{background:#ffecec;color:#b12d2d}.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.field{display:grid;gap:6px;margin:12px 0}.field label{font-weight:900}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:13px;padding:12px 13px;background:#fff;color:var(--ink);outline:none}.field input:focus{border-color:#79a9ed;box-shadow:0 0 0 3px #7aa9ef25}.help{font-size:12px;color:var(--muted)}
+.panel,.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:0 8px 26px #1f53820d}.panel{padding:17px}
+.gate{min-height:100vh;padding:24px;display:grid;place-items:center}.gate-shell{width:min(950px,100%)}.gate-brand{text-align:center;margin-bottom:18px}.gate-brand .logo{font-size:60px}.gate-brand h1{margin:4px 0;font-size:34px}.gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.gate-card{padding:22px}.gate-card h2{margin:0 0 5px}.profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:14px}.profile-card{border:1px solid var(--line);border-radius:17px;background:#fff;padding:14px;text-align:center;cursor:pointer;position:relative}.profile-card:hover{background:#f5f9ff}.profile-card .avatar{font-size:36px}.profile-card b{display:block;margin-top:5px}.profile-card small{color:var(--muted)}.profile-remove{position:absolute;right:7px;top:7px;border:0;background:#ffecec;color:#b12d2d;border-radius:999px;width:26px;height:26px;cursor:pointer}
+.tabs{display:flex;gap:7px;margin:14px 0}.tab{flex:1;border:1px solid var(--line);background:#f8fbff;border-radius:11px;padding:9px;font-weight:900;cursor:pointer}.tab.active{background:#e9e0ff;color:#4c2bb5;border-color:#c8b9f7}
+.notice{border-radius:14px;padding:12px 14px;margin:12px 0;background:#eef8ff;border:1px solid #cfe8fa}.notice.important{background:#fff7d8;border-color:#f1dc85}
+.app{min-height:100vh;display:grid;grid-template-columns:230px 1fr}.side{background:linear-gradient(180deg,#082d69,#0c448f);color:#fff;padding:22px 15px;position:sticky;top:0;height:100vh}.brand{font-size:24px;font-weight:900;margin:4px 8px 24px}.brand small{display:block;font-size:11px;color:#bfe0ff;margin-top:3px}.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;color:#eaf4ff;padding:12px 13px;border-radius:13px;text-align:left;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:linear-gradient(135deg,#8157ee,#5a37d6)}.sidebox{margin-top:20px;padding:14px;border-radius:16px;background:#ffffff16;border:1px solid #ffffff20;font-size:13px}
+.main{padding:22px;min-width:0}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}.top h1{font-size:27px;margin:0}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-weight:800;box-shadow:0 5px 16px #284f8210}
+.hero{background:linear-gradient(125deg,#1267dc,#4e8be8 58%,#79d2ff);color:#fff;padding:26px;border-radius:26px;display:grid;grid-template-columns:1.4fr .6fr;align-items:center;box-shadow:0 14px 34px #1b5ea52b}.hero h2{font-size:34px;margin:0 0 7px}.hero p{margin:0 0 17px;max-width:650px}.mascot{font-size:88px;text-align:center}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}.metric{padding:14px;background:#fff;border:1px solid var(--line);border-radius:var(--r)}.metric small{color:var(--muted);font-weight:800}.metric b{display:block;font-size:22px;margin-top:3px}.bar{height:8px;background:#e9eef7;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#23b479,#54c6ff);border-radius:inherit}
+.layout{display:grid;grid-template-columns:1.15fr 1fr .85fr;gap:14px;margin-top:18px}.panel h3{margin:0 0 12px}.days{display:flex;gap:7px;overflow:auto;padding-bottom:5px}.day{min-width:47px;height:47px;border-radius:50%;border:1px solid var(--line);background:#f8fbff;font-weight:900;color:#596b8d;cursor:pointer}.day.current{background:var(--purple);color:#fff;border:4px solid #ded4ff}.day.done{background:var(--green);color:#fff}.theme{margin:12px 0;padding:12px;border-radius:14px;background:linear-gradient(135deg,#fff4d8,#f2ecff)}
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}.task:last-child{border-bottom:0}.task input{width:19px;height:19px;accent-color:var(--green)}.task b{display:block}.task small{color:var(--muted)}.tag{font-size:11px;border-radius:999px;padding:4px 7px;background:#eef4ff;color:#2c5fb3;font-weight:900}.subject{display:flex;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.subject .ico{font-size:28px}.subject .grow{flex:1}.topic{display:flex;align-items:center;gap:8px;padding:9px;border-bottom:1px solid #eef2f7}.dot{width:10px;height:10px;border-radius:50%}.red{background:var(--red)}.amber{background:var(--yellow)}.good{background:var(--green)}
+.screen{display:none}.screen.active{display:block}.quizq{font-size:20px;font-weight:900;margin:14px 0}.answers{display:grid;gap:8px}.answers button{text-align:left;border:1px solid var(--line);border-radius:13px;background:#fff;padding:12px;cursor:pointer}.answers button:hover{background:#eef6ff}.answers button.correct{background:#e6f8ef;border-color:#6dd19d}.answers button.wrong{background:#fff0f0;border-color:#ec9494}
+.settings-grid,.parent-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.code-box{font-size:30px;font-weight:950;letter-spacing:4px;text-align:center;padding:16px;background:#eef6ff;border-radius:14px}.child-card{padding:15px;border:1px solid var(--line);border-radius:16px;margin:9px 0}.child-card .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.toast{position:fixed;right:18px;bottom:18px;background:#102859;color:#fff;padding:12px 16px;border-radius:13px;opacity:0;transform:translateY(20px);transition:.25s;z-index:50}.toast.show{opacity:1;transform:none}
+.loading{opacity:.65;pointer-events:none}
+@media(max-width:1000px){.layout{grid-template-columns:1fr 1fr}.layout>.panel:last-child{grid-column:1/-1}.grid5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.gate{padding:14px}.gate-grid{grid-template-columns:1fr}.gate-brand h1{font-size:28px}.app{grid-template-columns:1fr}.side{position:fixed;z-index:20;left:0;right:0;bottom:0;top:auto;height:auto;padding:7px}.brand,.sidebox{display:none}.nav{grid-template-columns:repeat(5,1fr);gap:3px}.nav button{font-size:0;text-align:center;padding:10px 5px}.nav button span{font-size:19px}.main{padding:15px 15px 82px}.top{align-items:flex-start}.top h1{font-size:22px}.hero{grid-template-columns:1fr;padding:20px}.hero h2{font-size:28px}.mascot{display:none}.grid5{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.layout>.panel:last-child{grid-column:auto}.settings-grid,.parent-grid{grid-template-columns:1fr}.chips{justify-content:flex-end}}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="side"><div class="brand">🎓 MATRIX T4<small>Persediaan Oktober • DLP</small></div><nav class="nav">
-<button class="active" data-screen="home"><span>🏠</span> Home</button><button data-screen="learn"><span>📚</span> Belajar</button><button data-screen="mistakes"><span>📕</span> Buku Silap</button><button data-screen="rewards"><span>🏆</span> Ganjaran</button><button data-screen="parent"><span>👨‍👩‍👧</span> Parent</button><button data-screen="settings"><span>⚙️</span> Tetapan</button>
-</nav><div class="sidebox"><b id="sideName">Pelajar Tahun 4</b><div style="margin-top:8px">⭐ <span id="sideStars">0</span> bintang &nbsp; 🔥 <span id="sideStreak">1</span> hari</div></div></aside>
+
+<section id="gate" class="gate">
+  <div class="gate-shell">
+    <div class="gate-brand"><div class="logo">🎓</div><h1>MATRIX Tahun 4</h1><div class="muted">Belajar ikut profil sendiri • progress sync ke cloud</div></div>
+    <div id="gateNotice"></div>
+    <div class="gate-grid">
+      <div class="panel gate-card">
+        <h2>👧 Siapa yang belajar sekarang?</h2>
+        <div class="muted">Satu phone boleh simpan beberapa profil. Progress setiap pelajar kekal berasingan.</div>
+        <div id="studentProfiles" class="profile-grid"></div>
+        <div class="tabs">
+          <button id="tabStudentRegister" class="tab active" onclick="showStudentForm('register')">Daftar baru</button>
+          <button id="tabStudentLogin" class="tab" onclick="showStudentForm('login')">Log masuk</button>
+        </div>
+        <form id="studentRegisterForm" onsubmit="registerStudent(event)">
+          <div class="field"><label>Nama pelajar</label><input id="regName" required maxlength="80" placeholder="Contoh: Zahra"></div>
+          <div class="field"><label>ID pelajar</label><input id="regStudentId" required maxlength="20" autocomplete="username" placeholder="Contoh: zahra10"><div id="regIdStatus" class="help">Pilih sendiri. 3–20 aksara: huruf, nombor, - atau _.</div></div>
+          <div class="field"><label>PIN / Password</label><input id="regPin" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="new-password" placeholder="••••••"><div class="help">6 digit number. Jangan guna tarikh lahir yang mudah diteka.</div></div>
+          <button id="regSubmit" class="btn blue" type="submit">Daftar & mula belajar</button>
+        </form>
+        <form id="studentLoginForm" class="hidden" onsubmit="loginStudent(event)">
+          <div class="field"><label>ID pelajar</label><input id="loginStudentId" required maxlength="20" autocomplete="username" placeholder="ID pelajar"></div>
+          <div class="field"><label>PIN / Password</label><input id="loginPin" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="current-password" placeholder="6 digit number"><div class="help">PIN ialah 6 digit nombor.</div></div>
+          <button class="btn blue" type="submit">Log masuk</button>
+        </form>
+      </div>
+
+      <div class="panel gate-card">
+        <h2>👨‍👩‍👧 Parent Area</h2>
+        <div class="muted">Portal ibu bapa berasingan. Hanya anak yang dipautkan akan muncul.</div>
+        <div id="guardianProfiles" class="profile-grid"></div>
+        <div class="tabs">
+          <button id="tabParentRegister" class="tab active" onclick="showGuardianForm('register')">Daftar parent</button>
+          <button id="tabParentLogin" class="tab" onclick="showGuardianForm('login')">Log masuk</button>
+        </div>
+        <form id="guardianRegisterForm" onsubmit="registerGuardian(event)">
+          <div class="field"><label>Nama ibu bapa / penjaga</label><input id="guardianName" required maxlength="80" placeholder="Contoh: Ayah"></div>
+          <div class="field"><label>Parent PIN</label><input id="guardianPin" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="••••••"><div class="help">6 digit number. Parent Code akan dijana selepas daftar.</div></div>
+          <button class="btn blue" type="submit">Daftar Parent Area</button>
+        </form>
+        <form id="guardianLoginForm" class="hidden" onsubmit="loginGuardian(event)">
+          <div class="field"><label>Parent Code</label><input id="parentCodeLogin" required maxlength="30" placeholder="Contoh: P-AB12CD34"></div>
+          <div class="field"><label>Parent PIN</label><input id="parentPinLogin" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6 digit number"></div>
+          <button class="btn blue" type="submit">Masuk Parent Area</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="studentApp" class="app hidden">
+<aside class="side">
+  <div class="brand">🎓 MATRIX T4<small>Persediaan Oktober • DLP</small></div>
+  <nav class="nav">
+    <button class="active" data-screen="home"><span>🏠</span> Home</button>
+    <button data-screen="learn"><span>📚</span> Belajar</button>
+    <button data-screen="mistakes"><span>📕</span> Buku Silap</button>
+    <button data-screen="rewards"><span>🏆</span> Ganjaran</button>
+    <button data-screen="profile"><span>👤</span> Profil</button>
+  </nav>
+  <div class="sidebox"><b id="sideName">Pelajar</b><div id="sideId"></div><div style="margin-top:8px">⭐ <span id="sideStars">0</span> &nbsp; 🔥 <span id="sideStreak">1</span></div></div>
+</aside>
 <main class="main">
-<section id="screen-home" class="screen active"><div class="top"><div><h1>Hai, <span id="studentName">Pelajar</span> 👋</h1><div class="muted">Satu misi pada satu masa. Kita kejar MATRIX dengan konsisten.</div></div><div class="chips"><div class="chip">⭐ <span id="starTop">0</span></div><div class="chip">🔥 <span id="streakTop">1</span></div><div class="chip hide-mobile">🌐 <span id="langTop">Dwi Bahasa</span></div></div></div>
-<div class="hero"><div><h2 id="heroTitle">Day 1 — Kenal Tahap Saya</h2><p id="heroDesc">Mulakan dengan diagnostik ringkas untuk tahu topik 🟢, 🟡 dan 🔴.</p><button class="btn primary" onclick="go('learn')">▶ Mula Misi Hari Ini</button></div><div class="mascot">👩‍🎓📚</div></div>
-<div class="grid5"><div class="metric"><small>Progress Hari Ini</small><b id="todayPct">0%</b><div class="bar"><span id="todayBar" style="width:0%"></span></div></div><div class="metric"><small>XP</small><b id="xp">0</b></div><div class="metric"><small>Bintang</small><b id="stars">0 ⭐</b></div><div class="metric"><small>Streak</small><b id="streak">1 🔥</b></div><div class="metric"><small>Buku Silap</small><b id="mistakeCount">0</b></div></div>
-<div class="layout"><div class="panel"><h3>📅 Day 1–Day 8</h3><div class="days" id="days"></div><div class="theme"><b id="themeText"></b><small id="targetText" style="display:block;margin-top:4px;color:#5e6880"></small></div><div id="tasks"></div></div><div class="panel"><h3>📚 Quick Start</h3><div id="subjects"></div></div><div class="panel"><h3>🎯 Fokus MATRIX</h3><div class="topic"><span class="dot red"></span><div><b>Topik merah</b><small class="muted">Ulang sampai faham</small></div></div><div class="topic"><span class="dot amber"></span><div><b>Topik kuning</b><small class="muted">Perlu satu pusingan lagi</small></div></div><div class="topic"><span class="dot good"></span><div><b>Topik hijau</b><small class="muted">Sudah kukuh</small></div></div><div style="margin-top:15px;padding:12px;border-radius:14px;background:#edf7ff"><b>💡 Prinsip</b><p style="margin:5px 0 0">Markah bukan tujuan tunggal. Sistem cari kesalahan berulang dan masukkan ke Buku Silap Saya.</p></div></div></div></section>
-<section id="screen-learn" class="screen"><div class="top"><div><h1>📚 Belajar</h1><div class="muted">Quiz ringkas dan terus dapat feedback.</div></div><div class="chips"><button class="chip" onclick="setLang('bm')">BM</button><button class="chip" onclick="setLang('en')">EN</button><button class="chip" onclick="setLang('dual')">Dwi</button></div></div><div class="panel" style="max-width:760px"><div id="quizSubject" class="tag">Mathematics DLP</div><div id="quizQuestion" class="quizq"></div><div id="quizTranslate" class="muted" style="margin-bottom:12px"></div><div id="answers" class="answers"></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn soft" onclick="newQuestion('Math')">🔢 Math</button><button class="btn soft" onclick="newQuestion('Science')">🔬 Science</button><button class="btn soft" onclick="newQuestion('BM')">📝 BM</button><button class="btn soft" onclick="newQuestion('English')">🇬🇧 English</button></div></div></section>
-<section id="screen-mistakes" class="screen"><div class="top"><div><h1>📕 Buku Silap Saya</h1><div class="muted">Semua jawapan salah dikumpulkan untuk dibuat semula.</div></div></div><div id="mistakeList" class="panel"></div></section>
-<section id="screen-rewards" class="screen"><div class="top"><div><h1>🏆 Ganjaran</h1><div class="muted">Ganjaran kerana usaha dan konsisten.</div></div></div><div class="grid5"><div class="metric"><small>XP</small><b id="rewardXP">0</b></div><div class="metric"><small>Stars</small><b id="rewardStars">0</b></div><div class="metric"><small>Streak</small><b id="rewardStreak">1</b></div></div><div class="panel" style="margin-top:14px"><h3>Badge</h3><p>🌱 Starter — mula Day 1</p><p>📚 Consistent Learner — lengkap 20 tugasan</p><p>🧠 Error Hunter — baiki 10 kesalahan</p><p>🏅 MATRIX Warrior — lengkap Day 1–Day 8</p></div></section>
-<section id="screen-parent" class="screen"><div id="parentBox"></div></section>
-<section id="screen-settings" class="screen"><div class="top"><div><h1>⚙️ Tetapan</h1><div class="muted">Data versi ini disimpan pada browser. Backend akan disambung selepas Cloudflare D1.</div></div></div><div class="panel"><div class="task"><span>👧</span><div><b>Nama pelajar</b><small>Untuk paparan app</small></div><button class="btn soft" onclick="renameStudent()">Ubah</button></div><div class="task"><span>🌐</span><div><b>Bahasa Math & Science</b><small id="langSetting">Dwi Bahasa</small></div><button class="btn soft" onclick="cycleLang()">Tukar</button></div><div class="task"><span>🔐</span><div><b>Parent PIN</b><small>Default 2468</small></div><button class="btn soft" onclick="changePin()">Ubah</button></div><div class="task"><span>🧹</span><div><b>Reset data</b><small>Padam progress browser ini</small></div><button class="btn" style="background:#ffecec;color:#b12d2d" onclick="resetAll()">Reset</button></div></div></section>
-</main></div><div class="toast" id="toast"></div>
+<section id="screen-home" class="screen active">
+  <div class="top"><div><h1>Hai, <span id="studentName">Pelajar</span> 👋</h1><div class="muted">Satu misi pada satu masa. Semua progress disimpan mengikut profil ini.</div></div><div class="chips"><button class="chip" onclick="switchUser()">⇄ Tukar Pelajar</button><div class="chip">⭐ <span id="starTop">0</span></div><div class="chip">🔥 <span id="streakTop">1</span></div></div></div>
+  <div class="hero"><div><h2 id="heroTitle">Day 1 — Kenal Tahap Saya</h2><p id="heroDesc"></p><button class="btn primary" onclick="go('learn')">▶ Mula Misi Hari Ini</button></div><div class="mascot">👩‍🎓📚</div></div>
+  <div class="grid5"><div class="metric"><small>Progress Hari Ini</small><b id="todayPct">0%</b><div class="bar"><span id="todayBar" style="width:0%"></span></div></div><div class="metric"><small>XP</small><b id="xp">0</b></div><div class="metric"><small>Bintang</small><b id="stars">0 ⭐</b></div><div class="metric"><small>Streak</small><b id="streak">1 🔥</b></div><div class="metric"><small>Buku Silap</small><b id="mistakeCount">0</b></div></div>
+  <div class="layout"><div class="panel"><h3>📅 Day 1–Day 8</h3><div class="days" id="days"></div><div class="theme"><b id="themeText"></b><small id="targetText" style="display:block;margin-top:4px;color:#5e6880"></small></div><div id="tasks"></div></div><div class="panel"><h3>📚 Quick Start</h3><div id="subjects"></div></div><div class="panel"><h3>🎯 Fokus MATRIX</h3><div class="topic"><span class="dot red"></span><div><b>Topik merah</b><small class="muted">Ulang sampai faham</small></div></div><div class="topic"><span class="dot amber"></span><div><b>Topik kuning</b><small class="muted">Perlu satu pusingan lagi</small></div></div><div class="topic"><span class="dot good"></span><div><b>Topik hijau</b><small class="muted">Sudah kukuh</small></div></div></div></div>
+</section>
+<section id="screen-learn" class="screen">
+  <div class="top"><div><h1>📚 Belajar</h1><div class="muted">Quiz ringkas, terus feedback dan jawapan salah masuk Buku Silap.</div></div><div class="chips"><button class="chip" onclick="setLang('bm')">BM</button><button class="chip" onclick="setLang('en')">EN</button><button class="chip" onclick="setLang('dual')">Dwi</button></div></div>
+  <div class="panel" style="max-width:760px"><div id="quizSubject" class="tag">Mathematics DLP</div><div id="quizQuestion" class="quizq"></div><div id="quizTranslate" class="muted" style="margin-bottom:12px"></div><div id="answers" class="answers"></div><div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn soft" onclick="newQuestion('Math')">🔢 Math</button><button class="btn soft" onclick="newQuestion('Science')">🔬 Science</button><button class="btn soft" onclick="newQuestion('BM')">📝 BM</button><button class="btn soft" onclick="newQuestion('English')">🇬🇧 English</button></div></div>
+</section>
+<section id="screen-mistakes" class="screen"><div class="top"><div><h1>📕 Buku Silap Saya</h1><div class="muted">Kesalahan disimpan pada profil pelajar ini sahaja.</div></div></div><div id="mistakeList" class="panel"></div></section>
+<section id="screen-rewards" class="screen"><div class="top"><div><h1>🏆 Ganjaran</h1><div class="muted">Ganjaran kerana usaha dan konsisten.</div></div></div><div class="grid5"><div class="metric"><small>XP</small><b id="rewardXP">0</b></div><div class="metric"><small>Stars</small><b id="rewardStars">0</b></div><div class="metric"><small>Streak</small><b id="rewardStreak">1</b></div></div><div class="panel" style="margin-top:14px"><h3>Badge</h3><p>🌱 Starter — mula Day 1</p><p>📚 Consistent Learner — lengkap 20 tugasan</p><p>🧠 Error Hunter — baiki kesalahan</p><p>🏅 MATRIX Warrior — lengkap Day 1–Day 8</p></div></section>
+<section id="screen-profile" class="screen">
+  <div class="top"><div><h1>👤 Profil & Tetapan</h1><div class="muted">Identiti, bahasa dan pautan Parent Area.</div></div></div>
+  <div class="settings-grid">
+    <div class="panel"><h3>Profil pelajar</h3><p><b id="profileName"></b><br><span id="profileId" class="muted"></span></p><button class="btn soft" onclick="switchUser()">⇄ Tukar Pelajar</button> <button class="btn danger" onclick="forgetCurrentStudent()">Buang dari device ini</button></div>
+    <div class="panel"><h3>🌐 Bahasa DLP</h3><p id="langSetting">Dwi Bahasa</p><button class="btn soft" onclick="cycleLang()">Tukar bahasa</button></div>
+    <div class="panel"><h3>🔗 Pautkan ibu bapa</h3><p class="muted">Jana kod sekali guna. Beri kod ini kepada ibu bapa yang mahu pautkan Parent Area.</p><button class="btn blue" onclick="generateLinkCode()">Jana 6-digit Link Code</button><div id="linkCodeBox"></div></div>
+    <div class="panel"><h3>📦 Progress lama</h3><p class="muted">Jika browser ini pernah guna prototaip lama, import checklist lama secara manual supaya tak bercampur dengan profil lain.</p><button class="btn soft" onclick="importLegacyProgress()">Import progress lama</button></div>
+  </div>
+</section>
+</main>
+</div>
+
+<section id="parentApp" class="gate hidden">
+  <div class="gate-shell">
+    <div class="top"><div><h1>👨‍👩‍👧 Parent Area</h1><div class="muted"><span id="parentName"></span> • <span id="parentCode"></span></div></div><div class="chips"><button class="btn ghost" onclick="switchUser()">Keluar / Tukar User</button></div></div>
+    <div id="parentNotice"></div>
+    <div class="parent-grid">
+      <div class="panel"><h3>🔗 Pautkan anak sedia ada</h3><form onsubmit="linkExistingChild(event)"><div class="field"><label>6-digit Link Code</label><input id="parentLinkCode" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456"><div class="help">Kod dijana dari Profil pelajar dan tamat selepas 10 minit.</div></div><div class="field"><label>Hubungan</label><input id="parentRelationship" value="anak" maxlength="30"></div><button class="btn blue">Pautkan anak</button></form></div>
+      <div class="panel"><h3>➕ Daftar anak baru</h3><form onsubmit="parentRegisterChild(event)"><div class="field"><label>Nama pelajar</label><input id="parentChildName" required maxlength="80"></div><div class="field"><label>ID pelajar</label><input id="parentChildId" required maxlength="20" placeholder="pilih ID"><div id="parentChildIdStatus" class="help">ID dipilih sendiri oleh pelajar/parent.</div></div><div class="field"><label>PIN / Password</label><input id="parentChildPin" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6 digit number"><div class="help">6 digit number.</div></div><button id="parentChildSubmit" class="btn blue">Daftar & pautkan</button></form></div>
+    </div>
+    <div class="panel" style="margin-top:14px"><h3>👧 Anak yang dipautkan</h3><div id="parentChildren"></div></div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
 <script>
+const STUDENT_PROFILES_KEY='matrix_student_profiles_v2';
+const GUARDIAN_PROFILES_KEY='matrix_guardian_profiles_v1';
+const ACTIVE_KEY='matrix_active_session_v2';
+
 const DAYS=[
-{theme:'Kenal Tahap Saya',desc:'Diagnostic Math & Science • cari 3 topik kuat dan 3 topik lemah',tasks:[['🌅','Rutin pagi & mengaji'],['🔢','Mathematics Diagnostic DLP'],['🔬','Science Diagnostic DLP'],['📝','Bahasa Melayu diagnostic'],['🇬🇧','English diagnostic'],['📕','Mulakan Buku Silap Saya'],['🏃','Aktiviti fizikal 30 minit'],['🌙','Refleksi & checklist malam']]},
-{theme:'Bahasa & Nombor',desc:'Whole numbers hingga 100,000 • BM tatabahasa & penulisan',tasks:[['🌅','Rutin pagi & bacaan'],['🔢','Numbers & Operations DLP'],['📝','BM kefahaman & tatabahasa'],['🇬🇧','English vocabulary & grammar'],['🔬','Science vocabulary DLP'],['🏠','Bantu kerja rumah'],['🏃','Aktiviti fizikal'],['📕','Semak Buku Silap']]},
-{theme:'Malaysia, Sejarah & Sains',desc:'Sejarah Malaysia • scientific process skills • eksperimen',tasks:[['🇲🇾','Sejarah & patriotisme'],['🔬','Scientific Process Skills'],['🧪','Aim • Hypothesis • Variables'],['🔢','Math revision sederhana'],['📝','BM tema Malaysia'],['🇬🇧','English tema Malaysia'],['🧠','Peta minda'],['🌙','Refleksi']]},
-{theme:'Math Power Day',desc:'Operasi • pecahan • perpuluhan • peratus • wang • masa • data',tasks:[['🔢','Numbers & Operations'],['✖️','Darab & bahagi'],['🍰','Fractions / Pecahan'],['🔟','Decimals & Percentages'],['💰','Money & Time'],['📐','Measurement & Geometry'],['📊','Data & KBAT'],['📕','Baiki soalan salah']]},
-{theme:'English + Science DLP',desc:'Grammar, comprehension & writing • Humans, Animals, Plants',tasks:[['🇬🇧','Vocabulary & spelling'],['✍️','Grammar & sentence'],['📖','Reading comprehension'],['📝','Guided writing'],['🫁','Humans / Manusia'],['🐾','Animals / Haiwan'],['🌱','Plants / Tumbuhan'],['🧪','Mini English + Science test']]},
-{theme:'STEM Investigation Day',desc:'Light • Sound • Energy • Materials • eksperimen menyerap air',tasks:[['💡','Light / Cahaya'],['🔊','Sound / Bunyi'],['⚡','Energy / Tenaga'],['🧱','Materials / Bahan'],['🧪','Eksperimen absorbs water'],['📏','Math measurement DLP'],['🔎','Science Hunt'],['📕','Rekod keputusan & silap']]},
-{theme:'Akhlak, Keluarga & Consolidation',desc:'Hari lebih ringan • fokus topik 🔴 & 🟡 sahaja',tasks:[['🤲','Agama / Moral'],['❤️','2 kebaikan hari ini'],['🏠','Bantu ibu/ayah'],['🔴','Math topik merah'],['🟡','Science topik kuning'],['📝','BM + English ringkas'],['🏃','Aktiviti fizikal'],['📕','Semak silap Day 1–6']]},
-{theme:'Mini MATRIX + Back to School',desc:'Simulasi peperiksaan • analisis keputusan • persediaan sekolah',tasks:[['🧮','Mini MATRIX Math'],['🔬','Mini MATRIX Science'],['📝','Mini MATRIX BM'],['🇬🇧','Mini MATRIX English'],['📊','Analisis markah'],['🔴','Senarai topik perlu baiki'],['🎒','Back-to-school checklist'],['🎯','Target menuju Oktober']]}
+{theme:'Kenal Tahap Saya',desc:'Diagnostic Math & Science • cari topik kuat dan lemah',tasks:['Rutin pagi & mengaji','Mathematics Diagnostic DLP','Science Diagnostic DLP','Bahasa Melayu diagnostic','English diagnostic','Mulakan Buku Silap Saya']},
+{theme:'Bahasa & Nombor',desc:'Kukuhkan asas nombor, operasi dan bahasa',tasks:['Rutin pagi','Math: nombor & operasi','BM: kefahaman','English: vocabulary','Ulang 3 kesalahan semalam']},
+{theme:'Malaysia, Sejarah & Sains',desc:'Gabung fakta, pemahaman dan kemahiran proses sains',tasks:['Rutin pagi','Science DLP','Sejarah / Malaysia','BM ringkas','Buku Silap']},
+{theme:'Math Power Day',desc:'Fokus Matematik dan latihan berperingkat',tasks:['Rutin pagi','Math set 1','Math set 2','Semak jalan kerja','Buku Silap Math']},
+{theme:'English + Science DLP',desc:'Bina keyakinan istilah English untuk Sains',tasks:['Rutin pagi','English comprehension','Science DLP','Vocabulary DLP','Buku Silap']},
+{theme:'STEM Investigation Day',desc:'Observe • predict • investigate • explain',tasks:['Rutin pagi','Eksperimen mini','Catat pemerhatian','Soalan STEM','Refleksi']},
+{theme:'Akhlak, Keluarga & Consolidation',desc:'Ulang topik merah/kuning dan aktiviti keluarga',tasks:['Rutin pagi & mengaji','Ulang topik merah','Ulang topik kuning','Aktiviti keluarga','Refleksi']},
+{theme:'Mini MATRIX Exam + Back to School',desc:'Simulasi ringkas dan rancangan sambungan',tasks:['Rutin pagi','Mini Math','Mini Science','BM + English','Semak Buku Silap','Rancang minggu sekolah']}
 ];
-const QS={Math:[['What is the value of digit 4 in 34,582?','Apakah nilai digit 4 dalam 34,582?',['400','4,000','40,000','40'],'4,000'],['2,450 - 875 = ?','2,450 - 875 = ?',['1,475','1,575','1,675','1,775'],'1,575'],['3/4 + 1/4 = ?','3/4 + 1/4 = ?',['1/2','1','4/8','3/8'],'1']],Science:[['Which organ is used for breathing?','Organ manakah digunakan untuk bernafas?',['Stomach','Lungs','Kidney','Skin'],'Lungs'],['A prediction made before an experiment is called...','Ramalan yang dibuat sebelum eksperimen dipanggil...',['Observation','Hypothesis','Conclusion','Data'],'Hypothesis'],['Plants make food through...','Tumbuhan membuat makanan melalui...',['Respiration','Photosynthesis','Excretion','Reflection'],'Photosynthesis']],BM:[['Pilih kata adjektif.','',['berlari','cantik','sekolah','makan'],'cantik'],['Pilih penjodoh bilangan yang betul: ___ pensel.','',['batang','buah','helai','biji'],'batang']],English:[['Choose the correct sentence.','Pilih ayat yang betul.',['She go to school.','She goes to school.','She going school.','She gone school.'],'She goes to school.'],['Past tense of “play” is...','Kata lampau bagi “play” ialah...',['plays','played','playing','playd'],'played']]};
-const KEY='matrix-t4-v2';let state=JSON.parse(localStorage.getItem(KEY)||'null')||{name:'Pelajar',day:0,checks:{},xp:0,stars:0,streak:1,mistakes:[],scores:{Math:0,Science:0,BM:0,English:0},attempts:{Math:0,Science:0,BM:0,English:0},lang:'dual',pin:'2468'};let current=null;
-function save(){localStorage.setItem(KEY,JSON.stringify(state));updateChrome()}function checks(d){if(!state.checks[d])state.checks[d]=Array(DAYS[d].tasks.length).fill(false);return state.checks[d]}function pct(d){let a=checks(d);return Math.round(a.filter(Boolean).length/a.length*100)}function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');clearTimeout(x._t);x._t=setTimeout(()=>x.classList.remove('show'),1900)}
-function go(s){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('screen-'+s).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===s));if(s==='home')renderHome();if(s==='learn'&&!current)newQuestion('Math');if(s==='mistakes')renderMistakes();if(s==='parent')renderParent();if(s==='rewards')renderRewards()}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.screen));
-function updateChrome(){studentName.textContent=state.name;sideName.textContent=state.name;sideStars.textContent=state.stars;sideStreak.textContent=state.streak;starTop.textContent=state.stars;streakTop.textContent=state.streak;xp.textContent=state.xp;stars.textContent=state.stars+' ⭐';streak.textContent=state.streak+' 🔥';mistakeCount.textContent=state.mistakes.length;langTop.textContent=state.lang==='dual'?'Dwi Bahasa':state.lang.toUpperCase();langSetting.textContent=langTop.textContent}
-function renderHome(){updateChrome();let d=DAYS[state.day];heroTitle.textContent=`Day ${state.day+1} — ${d.theme}`;heroDesc.textContent=d.desc;themeText.textContent=`Day ${state.day+1}: ${d.theme}`;targetText.textContent=d.desc;days.innerHTML=DAYS.map((x,i)=>`<button class="day ${pct(i)===100?'done':''} ${i===state.day?'current':''}" onclick="selectDay(${i})">${i+1}</button>`).join('');tasks.innerHTML=d.tasks.map((t,i)=>`<label class="task"><input type="checkbox" ${checks(state.day)[i]?'checked':''} onchange="toggleTask(${i},this.checked)"><div><b>${t[0]} ${t[1]}</b><small>${i<3?'Study block / Aktiviti utama':'Checklist harian'}</small></div><span class="tag">+5 XP</span></label>`).join('');let p=pct(state.day);todayPct.textContent=p+'%';todayBar.style.width=p+'%';subjects.innerHTML=[['🔢','Mathematics DLP','Math'],['🔬','Science DLP','Science'],['📝','Bahasa Melayu','BM'],['🇬🇧','English','English']].map(s=>`<div class="subject"><span class="ico">${s[0]}</span><div class="grow"><b>${s[1]}</b><small class="muted">Quiz interaktif</small></div><button class="btn soft" onclick="go('learn');newQuestion('${s[2]}')">Mula</button></div>`).join('')}
-function selectDay(i){state.day=i;save();renderHome()}function toggleTask(i,v){let a=checks(state.day),was=a[i];a[i]=v;if(v&&!was){state.xp+=5;if(a.every(Boolean)){state.stars+=3;toast('🎉 Day lengkap! +3 bintang')}}if(!v&&was)state.xp=Math.max(0,state.xp-5);save();renderHome()}
-function newQuestion(sub){let q=QS[sub][Math.floor(Math.random()*QS[sub].length)];current={sub,q};quizSubject.textContent=sub+(sub==='Math'||sub==='Science'?' DLP':'');quizQuestion.textContent=q[0];quizTranslate.textContent=(state.lang==='en'?'':q[1])||'';answers.innerHTML=q[2].map(a=>`<button onclick="answer(this,'${String(a).replaceAll("'","&#39;")}')">${a}</button>`).join('')}
-function answer(btn,a){let [q,tr,opts,correct]=current.q,sub=current.sub;state.attempts[sub]=(state.attempts[sub]||0)+1;if(a===correct){state.scores[sub]=(state.scores[sub]||0)+1;state.xp+=3;btn.style.background='#e7fff2';toast('✅ Betul! +3 XP')}else{btn.style.background='#fff0f0';state.mistakes.push({sub,q,answer:a,correct,date:new Date().toISOString()});toast('📕 Masuk Buku Silap Saya')}save();setTimeout(()=>newQuestion(sub),650)}
-function renderMistakes(){mistakeList.innerHTML=state.mistakes.length?state.mistakes.slice().reverse().map((m,i)=>`<div class="task"><span>❌</span><div><b>${m.sub}: ${m.q}</b><small>Jawapan saya: ${m.answer} • Betul: ${m.correct}</small></div><button class="btn soft" onclick="removeMistake(${state.mistakes.length-1-i})">Sudah faham</button></div>`).join(''):'<p class="muted">Belum ada kesalahan direkod. Bagus!</p>'}function removeMistake(i){state.mistakes.splice(i,1);state.xp+=2;save();renderMistakes();toast('✅ Dibaiki +2 XP')}
-function renderRewards(){rewardXP.textContent=state.xp;rewardStars.textContent=state.stars;rewardStreak.textContent=state.streak}
-function renderParent(){if(sessionStorage.getItem('parent')!=='1'){parentBox.innerHTML=`<div class="panel lock"><div style="font-size:64px">👨‍👩‍👧</div><h2>Parent Area</h2><p class="muted">Masukkan PIN 4 digit.</p><input id="pinInput" inputmode="numeric" maxlength="4"><div style="margin-top:12px"><button class="btn primary" onclick="unlockParent()">Log Masuk</button></div></div>`;return}let completed=DAYS.reduce((n,d,i)=>n+checks(i).filter(Boolean).length,0),total=DAYS.reduce((n,d)=>n+d.tasks.length,0);parentBox.innerHTML=`<div class="top"><div><h1>👨‍👩‍👧 Parent Dashboard</h1><div class="muted">Ringkasan kemajuan ${state.name}</div></div></div><div class="parent-grid"><div class="panel"><small class="muted">Keseluruhan</small><div class="big">${Math.round(completed/total*100)}%</div><p>${completed} / ${total} tugasan selesai</p></div><div class="panel"><small class="muted">Buku Silap</small><div class="big">${state.mistakes.length}</div><p>soalan perlu diberi perhatian</p></div><div class="panel"><h3>Markah Quiz</h3>${Object.keys(state.attempts).map(k=>{let a=state.attempts[k]||0,s=state.scores[k]||0,p=a?Math.round(s/a*100):0;return `<div class="task"><span>${k}</span><div class="grow"><div class="bar"><span style="width:${p}%"></span></div></div><b>${p}%</b></div>`}).join('')}</div><div class="panel"><h3>Progress 8 Hari</h3>${DAYS.map((d,i)=>`<div class="task"><span>Day ${i+1}</span><div class="grow"><div class="bar"><span style="width:${pct(i)}%"></span></div></div><b>${pct(i)}%</b></div>`).join('')}</div></div>`}
-function unlockParent(){if(pinInput.value===state.pin){sessionStorage.setItem('parent','1');renderParent()}else toast('PIN tidak betul')}function setLang(l){state.lang=l;save();if(current)newQuestion(current.sub);toast('Bahasa: '+(l==='dual'?'Dwi Bahasa':l.toUpperCase()))}function cycleLang(){setLang(state.lang==='dual'?'bm':state.lang==='bm'?'en':'dual')}function renameStudent(){let n=prompt('Nama pelajar:',state.name);if(n&&n.trim()){state.name=n.trim();save();updateChrome()}}function changePin(){let p=prompt('PIN baru 4 digit:',state.pin);if(/^\d{4}$/.test(p)){state.pin=p;save();toast('PIN ditukar')}else if(p!==null)toast('PIN mesti 4 digit')}function resetAll(){if(confirm('Padam semua progress pada browser ini?')){localStorage.removeItem(KEY);sessionStorage.clear();location.reload()}}
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));renderHome();
+
+const QUIZ={
+Math:[
+{topic:'Operasi',bm:'48 ÷ 6 = ?',en:'What is 48 ÷ 6?',a:['6','7','8','9'],c:2},
+{topic:'Pecahan',bm:'Apakah separuh daripada 18?',en:'What is half of 18?',a:['6','8','9','12'],c:2},
+{topic:'Darab',bm:'7 × 8 = ?',en:'What is 7 × 8?',a:['48','54','56','64'],c:2}
+],
+Science:[
+{topic:'Tumbuhan',bm:'Bahagian tumbuhan yang menyerap air ialah...',en:'The part of a plant that absorbs water is...',a:['Daun / leaf','Akar / root','Bunga / flower','Buah / fruit'],c:1},
+{topic:'Cahaya',bm:'Objek legap membenarkan cahaya melaluinya.',en:'An opaque object allows light to pass through it.',a:['Betul / True','Salah / False'],c:1},
+{topic:'Haiwan',bm:'Haiwan yang bernafas menggunakan insang ialah...',en:'An animal that breathes using gills is...',a:['Kucing','Ikan','Burung','Kambing'],c:1}
+],
+BM:[
+{topic:'Tatabahasa',bm:'Pilih ayat yang betul.',en:'',a:['Ali sedang makan nasi.','Ali sedang nasi makan.','Makan Ali sedang nasi.'],c:0},
+{topic:'Kata adjektif',bm:'Perkataan manakah kata adjektif?',en:'',a:['berlari','cantik','sekolah','makan'],c:1}
+],
+English:[
+{topic:'Grammar',bm:'',en:'Choose the correct sentence.',a:['She go to school.','She goes to school.','She going school.'],c:1},
+{topic:'Vocabulary',bm:'',en:'Which word means "gembira"?',a:['sad','happy','slow','dark'],c:1}
+]
+};
+
+let active=null;
+let state={student:null,stats:{xp:0,stars:0,streak:1,preferred_language:'dual'},progress:[],mistakes:[]};
+let currentDay=1,currentQuiz=null,idTimer=null,parentIdTimer=null,parentChildrenCache=[];
+
+const $=id=>document.getElementById(id);
+const readJson=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||'')||fallback}catch{return fallback}};
+const writeJson=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+const studentProfiles=()=>readJson(STUDENT_PROFILES_KEY,[]);
+const guardianProfiles=()=>readJson(GUARDIAN_PROFILES_KEY,[]);
+
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
+function setBusy(on){document.body.classList.toggle('loading',!!on)}
+function safe(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+async function api(path,{method='GET',body,auth=true}={}){
+  const headers={'content-type':'application/json'};
+  if(auth&&active?.token)headers.authorization=`Bearer ${active.token}`;
+  const res=await fetch(path,{method,headers,body:body?JSON.stringify(body):undefined});
+  const data=await res.json().catch(()=>({ok:false,error:'Respons API tidak sah'}));
+  if(!res.ok||data.ok===false){
+    if(res.status===401&&auth){sessionStorage.removeItem(ACTIVE_KEY)}
+    throw new Error(data.error||`HTTP ${res.status}`);
+  }
+  return data;
+}
+
+function rememberStudent(profile){
+  const list=studentProfiles().filter(p=>p.studentId!==profile.studentId);
+  list.unshift({studentId:profile.studentId,name:profile.name});
+  writeJson(STUDENT_PROFILES_KEY,list.slice(0,12));
+}
+function rememberGuardian(profile){
+  const list=guardianProfiles().filter(p=>p.parentCode!==profile.parentCode);
+  list.unshift({parentCode:profile.parentCode,name:profile.name});
+  writeJson(GUARDIAN_PROFILES_KEY,list.slice(0,8));
+}
+
+function renderGateProfiles(){
+  const students=studentProfiles();
+  $('studentProfiles').innerHTML=students.length?students.map(p=>`<div class="profile-card" onclick="loginRememberedStudent('${safe(p.studentId)}')"><button class="profile-remove" onclick="event.stopPropagation();removeStudentProfile('${safe(p.studentId)}')">×</button><div class="avatar">👧</div><b>${safe(p.name)}</b><small>@${safe(p.studentId)}</small></div>`).join(''):'<div class="muted">Belum ada profil disimpan pada device ini.</div>';
+  const parents=guardianProfiles();
+  $('guardianProfiles').innerHTML=parents.length?parents.map(p=>`<div class="profile-card" onclick="loginRememberedGuardian('${safe(p.parentCode)}')"><button class="profile-remove" onclick="event.stopPropagation();removeGuardianProfile('${safe(p.parentCode)}')">×</button><div class="avatar">👨‍👩‍👧</div><b>${safe(p.name)}</b><small>${safe(p.parentCode)}</small></div>`).join(''):'<div class="muted">Belum ada Parent profile pada device ini.</div>';
+}
+function removeStudentProfile(id){writeJson(STUDENT_PROFILES_KEY,studentProfiles().filter(p=>p.studentId!==id));renderGateProfiles()}
+function removeGuardianProfile(id){writeJson(GUARDIAN_PROFILES_KEY,guardianProfiles().filter(p=>p.parentCode!==id));renderGateProfiles()}
+
+function showStudentForm(mode){
+  $('studentRegisterForm').classList.toggle('hidden',mode!=='register');
+  $('studentLoginForm').classList.toggle('hidden',mode!=='login');
+  $('tabStudentRegister').classList.toggle('active',mode==='register');
+  $('tabStudentLogin').classList.toggle('active',mode==='login');
+}
+function showGuardianForm(mode){
+  $('guardianRegisterForm').classList.toggle('hidden',mode!=='register');
+  $('guardianLoginForm').classList.toggle('hidden',mode!=='login');
+  $('tabParentRegister').classList.toggle('active',mode==='register');
+  $('tabParentLogin').classList.toggle('active',mode==='login');
+}
+function loginRememberedStudent(id){showStudentForm('login');$('loginStudentId').value=id;$('loginPin').focus()}
+function loginRememberedGuardian(code){showGuardianForm('login');$('parentCodeLogin').value=code;$('parentPinLogin').focus()}
+
+function gateNotice(html,important=false){$('gateNotice').innerHTML=`<div class="notice ${important?'important':''}">${html}</div>`}
+function parentNotice(html,important=false){$('parentNotice').innerHTML=`<div class="notice ${important?'important':''}">${html}</div>`}
+
+async function checkStudentId(inputId,statusId,submitId){
+  const input=$(inputId),status=$(statusId),submit=submitId?$(submitId):null;
+  const value=input.value.trim();
+  if(submit)submit.disabled=true;
+  if(!value){status.textContent='Pilih sendiri. 3–20 aksara: huruf, nombor, - atau _.';status.className='help';return false}
+  try{
+    const d=await api(`/api/auth/student-id-availability?id=${encodeURIComponent(value)}`,{auth:false});
+    input.value=d.normalizedId||value.toLowerCase();
+    if(!d.valid){status.textContent=d.reason||'ID tidak sah';status.className='help error';return false}
+    if(d.available){status.textContent='✓ ID available — boleh digunakan';status.className='help success';if(submit)submit.disabled=false;return true}
+    status.textContent='✕ ID sudah digunakan. Pilih ID lain.';status.className='help error';return false;
+  }catch(e){status.textContent='Tak dapat semak ID sekarang: '+e.message;status.className='help warning';return false}
+}
+
+$('regStudentId').addEventListener('input',()=>{clearTimeout(idTimer);$('regIdStatus').textContent='Menyemak selepas anda berhenti menaip...';$('regIdStatus').className='help';$('regSubmit').disabled=true;idTimer=setTimeout(()=>checkStudentId('regStudentId','regIdStatus','regSubmit'),600)});
+$('parentChildId').addEventListener('input',()=>{clearTimeout(parentIdTimer);$('parentChildIdStatus').textContent='Menyemak ID...';$('parentChildSubmit').disabled=true;parentIdTimer=setTimeout(()=>checkStudentId('parentChildId','parentChildIdStatus','parentChildSubmit'),600)});
+
+async function registerStudent(ev){
+  ev.preventDefault();setBusy(true);
+  try{
+    if(!(await checkStudentId('regStudentId','regIdStatus','regSubmit')))throw new Error('Pilih ID pelajar yang available dahulu');
+    const d=await api('/api/auth/student/register',{method:'POST',auth:false,body:{name:$('regName').value,studentId:$('regStudentId').value,pin:$('regPin').value}});
+    rememberStudent(d.student);
+    gateNotice(`<b>Pendaftaran berjaya.</b> Recovery Code: <b>${safe(d.recoveryCode)}</b><br><small>Simpan kod ini dengan ibu bapa. Kod dipaparkan sekali sahaja.</small>`,true);
+    await enterStudent(d);
+  }catch(e){toast(e.message)}finally{setBusy(false)}
+}
+async function loginStudent(ev){
+  ev.preventDefault();setBusy(true);
+  try{
+    const d=await api('/api/auth/student/login',{method:'POST',auth:false,body:{studentId:$('loginStudentId').value,pin:$('loginPin').value}});
+    rememberStudent(d.student);await enterStudent(d);
+  }catch(e){toast(e.message)}finally{setBusy(false)}
+}
+async function registerGuardian(ev){
+  ev.preventDefault();setBusy(true);
+  try{
+    const d=await api('/api/auth/guardian/register',{method:'POST',auth:false,body:{name:$('guardianName').value,pin:$('guardianPin').value}});
+    rememberGuardian(d.guardian);
+    gateNotice(`<b>Parent Area berjaya dibuat.</b><br>Parent Code: <b>${safe(d.guardian.parentCode)}</b><br>Recovery Code: <b>${safe(d.recoveryCode)}</b><br><small>Simpan kedua-dua kod ini.</small>`,true);
+    await enterGuardian(d);
+  }catch(e){toast(e.message)}finally{setBusy(false)}
+}
+async function loginGuardian(ev){
+  ev.preventDefault();setBusy(true);
+  try{
+    const d=await api('/api/auth/guardian/login',{method:'POST',auth:false,body:{parentCode:$('parentCodeLogin').value,pin:$('parentPinLogin').value}});
+    rememberGuardian(d.guardian);await enterGuardian(d);
+  }catch(e){toast(e.message)}finally{setBusy(false)}
+}
+
+async function enterStudent(d){
+  active={type:'student',token:d.token,profile:d.student,expiresAt:d.expiresAt};
+  sessionStorage.setItem(ACTIVE_KEY,JSON.stringify(active));
+  $('gate').classList.add('hidden');$('parentApp').classList.add('hidden');$('studentApp').classList.remove('hidden');
+  await loadStudentState();go('home');
+}
+async function enterGuardian(d){
+  active={type:'guardian',token:d.token,profile:d.guardian,expiresAt:d.expiresAt};
+  sessionStorage.setItem(ACTIVE_KEY,JSON.stringify(active));
+  $('gate').classList.add('hidden');$('studentApp').classList.add('hidden');$('parentApp').classList.remove('hidden');
+  $('parentName').textContent=d.guardian.name;$('parentCode').textContent=d.guardian.parentCode;
+  await loadParentChildren();
+}
+
+async function restoreSession(){
+  try{
+    const raw=sessionStorage.getItem(ACTIVE_KEY);if(!raw)return false;
+    active=JSON.parse(raw);
+    const me=await api('/api/me');
+    if(me.actorType==='student'&&me.student){active.profile=me.student;sessionStorage.setItem(ACTIVE_KEY,JSON.stringify(active));await enterStudent({...active,student:me.student});return true}
+    if(me.actorType==='guardian'&&me.guardian){active.profile=me.guardian;sessionStorage.setItem(ACTIVE_KEY,JSON.stringify(active));await enterGuardian({...active,guardian:me.guardian});return true}
+  }catch(e){sessionStorage.removeItem(ACTIVE_KEY);active=null}
+  return false;
+}
+
+async function switchUser(){
+  if(active?.token){try{await api('/api/auth/logout',{method:'POST'})}catch{}}
+  active=null;sessionStorage.removeItem(ACTIVE_KEY);
+  $('studentApp').classList.add('hidden');$('parentApp').classList.add('hidden');$('gate').classList.remove('hidden');
+  renderGateProfiles();
+}
+function forgetCurrentStudent(){
+  if(!active?.profile)return;
+  const id=active.profile.studentId;
+  if(!confirm(`Buang profil @${id} dari device ini? Data cloud tidak akan dipadam.`))return;
+  removeStudentProfile(id);switchUser();
+}
+
+async function loadStudentState(){
+  const d=await api('/api/student/state');
+  state={student:d.student,stats:d.stats||{xp:0,stars:0,streak:1,preferred_language:'dual'},progress:d.progress||[],mistakes:d.mistakes||[]};
+  active.profile=d.student;rememberStudent(d.student);sessionStorage.setItem(ACTIVE_KEY,JSON.stringify(active));
+  renderStudent();
+}
+
+function progressDone(day,taskKey){return state.progress.some(p=>Number(p.day_no)===day&&p.task_key===taskKey&&Number(p.is_done)===1)}
+function dayDone(day){return DAYS[day-1].tasks.every((_,i)=>progressDone(day,`d${day}-t${i}`))}
+function renderStudent(){
+  const s=state.student||active?.profile||{name:'Pelajar',studentId:''};
+  const st=state.stats||{};
+  $('studentName').textContent=s.name;$('sideName').textContent=s.name;$('sideId').textContent='@'+s.studentId;$('profileName').textContent=s.name;$('profileId').textContent='@'+s.studentId;
+  ['xp','rewardXP'].forEach(id=>$(id).textContent=st.xp||0);
+  $('stars').textContent=(st.stars||0)+' ⭐';$('rewardStars').textContent=st.stars||0;$('starTop').textContent=st.stars||0;$('sideStars').textContent=st.stars||0;
+  $('streak').textContent=(st.streak||1)+' 🔥';$('rewardStreak').textContent=st.streak||1;$('streakTop').textContent=st.streak||1;$('sideStreak').textContent=st.streak||1;
+  $('mistakeCount').textContent=(state.mistakes||[]).filter(m=>m.status==='open').length;
+  const langLabel={bm:'Bahasa Melayu',en:'English',dual:'Dwi Bahasa'}[st.preferred_language||'dual'];$('langSetting').textContent=langLabel;
+  renderDays();renderTasks();renderSubjects();renderMistakes();
+  if(!currentQuiz)newQuestion('Math');
+}
+function renderDays(){
+  $('days').innerHTML=DAYS.map((d,i)=>{const day=i+1;return `<button class="day ${day===currentDay?'current':''} ${dayDone(day)?'done':''}" onclick="selectDay(${day})">${day}</button>`}).join('');
+}
+function selectDay(day){currentDay=day;renderDays();renderTasks()}
+function renderTasks(){
+  const d=DAYS[currentDay-1];$('heroTitle').textContent=`Day ${currentDay} — ${d.theme}`;$('heroDesc').textContent=d.desc;$('themeText').textContent=`Day ${currentDay}: ${d.theme}`;$('targetText').textContent=d.desc;
+  $('tasks').innerHTML=d.tasks.map((t,i)=>{const key=`d${currentDay}-t${i}`;return `<label class="task"><input type="checkbox" ${progressDone(currentDay,key)?'checked':''} onchange="toggleTask(${currentDay},'${key}',this)"><div><b>${safe(t)}</b><small>Sync ke profil @${safe(state.student.studentId)}</small></div><span class="tag">${currentDay}.${i+1}</span></label>`}).join('');
+  const done=d.tasks.filter((_,i)=>progressDone(currentDay,`d${currentDay}-t${i}`)).length;const pct=Math.round(done/d.tasks.length*100);$('todayPct').textContent=pct+'%';$('todayBar').style.width=pct+'%';
+}
+async function toggleTask(day,key,el){
+  try{await api('/api/student/progress',{method:'POST',body:{dayNo:day,taskKey:key,isDone:el.checked}});const existing=state.progress.find(p=>Number(p.day_no)===day&&p.task_key===key);if(existing)existing.is_done=el.checked?1:0;else state.progress.push({day_no:day,task_key:key,is_done:el.checked?1:0});renderStudent();toast(el.checked?'Disimpan ✓':'Tugasan dibuka semula')}catch(e){el.checked=!el.checked;toast(e.message)}
+}
+function renderSubjects(){
+  const data=[['🔢','Mathematics DLP','Math'],['🔬','Science DLP','Science'],['📝','Bahasa Melayu','BM'],['🇬🇧','English','English']];
+  $('subjects').innerHTML=data.map(x=>`<div class="subject"><div class="ico">${x[0]}</div><div class="grow"><b>${x[1]}</b><small class="muted">Quiz cepat</small></div><button class="btn soft" onclick="newQuestion('${x[2]}');go('learn')">Mula</button></div>`).join('');
+}
+function go(name){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));const target=$('screen-'+name);if(target)target.classList.add('active');
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.screen===name));
+}
+document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>go(btn.dataset.screen)));
+
+function newQuestion(subject){
+  const list=QUIZ[subject];currentQuiz={subject,q:list[Math.floor(Math.random()*list.length)],answered:false};
+  const q=currentQuiz.q;const lang=state.stats?.preferred_language||'dual';$('quizSubject').textContent=subject+(subject==='Math'||subject==='Science'?' DLP':'');
+  if(lang==='en'&&q.en){$('quizQuestion').textContent=q.en;$('quizTranslate').textContent=''}
+  else if(lang==='bm'||!q.en){$('quizQuestion').textContent=q.bm||q.en;$('quizTranslate').textContent=''}
+  else{$('quizQuestion').textContent=q.bm||q.en;$('quizTranslate').textContent=q.en&&q.bm?q.en:''}
+  $('answers').innerHTML=q.a.map((a,i)=>`<button onclick="answerQuestion(${i},this)">${safe(a)}</button>`).join('');
+}
+async function answerQuestion(index,button){
+  if(!currentQuiz||currentQuiz.answered)return;currentQuiz.answered=true;const q=currentQuiz.q;const correct=index===q.c;
+  [...$('answers').children].forEach((b,i)=>b.classList.add(i===q.c?'correct':i===index?'wrong':''));
+  try{
+    const d=await api('/api/student/quiz',{method:'POST',body:{subject:currentQuiz.subject,topic:q.topic,question:q.bm||q.en,selectedAnswer:q.a[index],correctAnswer:q.a[q.c],isCorrect:correct}});
+    state.stats={...state.stats,...d.stats};toast(correct?'Betul! +10 XP 🎉':'Belum tepat — masuk Buku Silap');
+    setTimeout(async()=>{await loadStudentState();newQuestion(currentQuiz.subject)},850);
+  }catch(e){toast(e.message)}
+}
+function renderMistakes(){
+  const open=(state.mistakes||[]).filter(m=>m.status==='open');
+  $('mistakeList').innerHTML=open.length?open.map(m=>`<div class="child-card"><b>${safe(m.subject)}${m.topic?' • '+safe(m.topic):''}</b><p>${safe(m.question)}</p><small class="error">Jawapan: ${safe(m.selected_answer||'-')}</small><br><small class="success">Betul: ${safe(m.correct_answer)}</small><div style="margin-top:8px"><button class="btn green" onclick="masterMistake(${m.id})">Saya dah faham ✓</button></div></div>`).join(''):'<div class="muted">Belum ada kesalahan terbuka. Bagus! 🎉</div>';
+}
+async function masterMistake(id){try{await api(`/api/student/mistakes/${id}/mastered`,{method:'POST'});await loadStudentState();toast('Ditanda mastered ✓')}catch(e){toast(e.message)}}
+
+async function setLang(lang){try{await api('/api/student/stats',{method:'POST',body:{preferredLanguage:lang}});state.stats.preferred_language=lang;renderStudent();newQuestion(currentQuiz?.subject||'Math')}catch(e){toast(e.message)}}
+function cycleLang(){const order=['dual','bm','en'];const cur=state.stats?.preferred_language||'dual';setLang(order[(order.indexOf(cur)+1)%order.length])}
+
+async function generateLinkCode(){
+  try{const d=await api('/api/student/link-code',{method:'POST'});$('linkCodeBox').innerHTML=`<div class="code-box">${safe(d.linkCode)}</div><div class="help">Sah sehingga ${new Date(d.expiresAt).toLocaleTimeString('ms-MY',{hour:'2-digit',minute:'2-digit'})}. Selepas digunakan, kod tidak boleh digunakan semula.</div>`}catch(e){toast(e.message)}
+}
+
+async function importLegacyProgress(){
+  const raw=localStorage.getItem('matrixT4State');if(!raw){toast('Tiada progress prototaip lama dijumpai');return}
+  if(!confirm('Import checklist lama ke profil ini? Pastikan progress lama memang milik pelajar yang sedang login.'))return;
+  try{
+    const legacy=JSON.parse(raw);let count=0;
+    for(const [key,val] of Object.entries(legacy.done||{})){if(!val)continue;const m=key.match(/^(\d+)[-:](\d+)$/);if(!m)continue;const day=Number(m[1]),idx=Number(m[2]);if(day<1||day>8)continue;await api('/api/student/progress',{method:'POST',body:{dayNo:day,taskKey:`d${day}-t${idx}`,isDone:true}});count++}
+    if(['bm','en','dual'].includes(legacy.lang))await api('/api/student/stats',{method:'POST',body:{preferredLanguage:legacy.lang,streak:Number(legacy.streak)||1}});
+    localStorage.setItem(`matrix_legacy_imported_${state.student.id}`,new Date().toISOString());await loadStudentState();toast(`${count} checklist lama diimport`);
+  }catch(e){toast('Import gagal: '+e.message)}
+}
+
+async function loadParentChildren(){
+  const d=await api('/api/guardian/children');renderParentChildren(d.children||[]);
+}
+function renderParentChildren(children){
+  parentChildrenCache=children;
+  $('parentChildren').innerHTML=children.length?children.map(c=>`<div class="child-card"><b>${safe(c.name)}</b> <span class="muted">@${safe(c.studentId)}</span><div class="muted">${safe(c.relationship)} • ${safe(c.role)}</div><p>⭐ ${c.stats.stars} • XP ${c.stats.xp} • 🔥 ${c.stats.streak} • ✅ ${c.stats.completedTasks} tugasan • 📕 ${c.stats.openMistakes} silap terbuka</p><div class="actions"><button class="btn soft" onclick="rememberLinkedChildById('${safe(c.id)}')">Simpan profil pada device</button><button class="btn ghost" onclick="resetChildPinById('${safe(c.id)}')">Reset PIN</button><button class="btn danger" onclick="unlinkChildById('${safe(c.id)}')">Unlink</button></div></div>`).join(''):'<div class="muted">Belum ada anak dipautkan.</div>';
+}
+function parentChild(id){return parentChildrenCache.find(c=>c.id===id)}
+function rememberLinkedChildById(id){const c=parentChild(id);if(!c)return;rememberStudent({studentId:c.studentId,name:c.name});renderGateProfiles();toast('Profil disimpan pada device. Anak masih perlu PIN untuk login.')}
+async function linkExistingChild(ev){
+  ev.preventDefault();setBusy(true);
+  try{const d=await api('/api/guardian/link',{method:'POST',body:{linkCode:$('parentLinkCode').value,relationship:$('parentRelationship').value}});$('parentLinkCode').value='';parentNotice(`Berjaya pautkan <b>${safe(d.student.name)}</b> (@${safe(d.student.studentId)}).`);await loadParentChildren()}catch(e){toast(e.message)}finally{setBusy(false)}
+}
+async function parentRegisterChild(ev){
+  ev.preventDefault();setBusy(true);
+  try{
+    if(!(await checkStudentId('parentChildId','parentChildIdStatus','parentChildSubmit')))throw new Error('Pilih ID pelajar yang available dahulu');
+    const d=await api('/api/guardian/children/register',{method:'POST',body:{name:$('parentChildName').value,studentId:$('parentChildId').value,pin:$('parentChildPin').value,relationship:'anak'}});
+    rememberStudent(d.student);
+    parentNotice(`Anak <b>${safe(d.student.name)}</b> berjaya didaftarkan & dipautkan.<br>Recovery Code anak: <b>${safe(d.recoveryCode)}</b>`,true);
+    $('parentChildName').value='';$('parentChildId').value='';$('parentChildPin').value='';$('parentChildSubmit').disabled=true;$('parentChildIdStatus').textContent='ID dipilih sendiri oleh pelajar/parent.';await loadParentChildren();
+  }catch(e){toast(e.message)}finally{setBusy(false)}
+}
+async function resetChildPinById(id){
+  const c=parentChild(id);if(!c)return;
+  const pin=prompt(`PIN baru untuk ${c.name} (6 digit number):`);if(pin===null)return;if(!/^\d{6}$/.test(pin)){toast('PIN mesti 6 digit nombor');return}
+  try{await api(`/api/guardian/children/${encodeURIComponent(id)}/reset-pin`,{method:'POST',body:{pin}});toast('PIN berjaya direset. Sesi lama anak telah ditutup.')}catch(e){toast(e.message)}
+}
+async function unlinkChildById(id){
+  const c=parentChild(id);if(!c)return;
+  if(!confirm(`Unlink ${c.name} dari Parent Area? Progress anak tidak akan dipadam.`))return;
+  try{await api(`/api/guardian/children/${encodeURIComponent(id)}`,{method:'DELETE'});await loadParentChildren();toast('Akses parent diputuskan; progress anak kekal.')}catch(e){toast(e.message)}
+}
+
+async function boot(){
+  renderGateProfiles();$('regSubmit').disabled=true;$('parentChildSubmit').disabled=true;
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  const restored=await restoreSession();if(!restored){$('gate').classList.remove('hidden');$('studentApp').classList.add('hidden');$('parentApp').classList.add('hidden')}
+}
+boot();
 </script>
-</body></html>
+</body>
+</html>

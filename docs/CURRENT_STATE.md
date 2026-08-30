@@ -37,18 +37,39 @@ This document separates verified repository/configuration facts from pending run
 
 **Still not separately verified:** logout then fresh login with the same PIN, duplicate-ID conflict, wrong-PIN throttling/lockout and explicit D1 row inspection.
 
-### Interactive learning module repair in repository
-- Home `Mula Misi Day Ini` now opens the first incomplete task for the selected Day instead of only changing screen.
-- Each Day task now has a `Buka`/`Ulang` action.
-- Subject tasks open the matching Math/Science/BM/English practice module.
-- Non-quiz activities can be explicitly marked complete from the learning screen.
-- Correct quiz answers can complete the active Day module and persist task progress through the existing D1 API.
-- Navigation now scrolls to the top when changing app screens, avoiding mobile taps that appeared to do nothing while the viewport stayed low on the old screen.
-- Quick quizzes rotate deterministically instead of randomly returning the same question repeatedly.
-- Rewards/badges now render locked/unlocked state from actual progress instead of static text.
-- Static repository verification now guards the core interactive module functions.
+### Source-based Day 1–Day 8 learning content now implemented
+- Added `learning-content.js` as the structured learning-content source for the app.
+- The structure is derived from the Day 1–Day 8 MATRIX preparation PDFs supplied by the owner, instead of relying on the earlier tiny demo quiz bank alone.
+- Every Day has its own theme, goal, target and module list.
+- Modules now cover the planned progression:
+  - Day 1 diagnostic: Math DLP, Science DLP, BM, English, Buku Silap.
+  - Day 2 Bahasa & Nombor: whole numbers, operations, BM reading, English vocabulary/grammar/reading, Science quick review, writing.
+  - Day 3 Malaysia/Sejarah/Sains: history/patriotism, scientific-process skills, Life Science, mixed Math, BM/English.
+  - Day 4 Math Power: number/operations, fractions-decimals-percent, money/time/measurement, geometry/data, four-step problem solving, Science maintenance.
+  - Day 5 English + Science: vocabulary/grammar, reading/writing, Humans, Animals, Plants, Scientific Skills, light Math/BM.
+  - Day 6 STEM: Light, Sound, Energy, Materials, absorbency fair-test investigation, measurement/money/time, experiment writing and DLP translation.
+  - Day 7 Consolidation: Math/Science red topics, BM/English consolidation, History/RBT and family/reflection activities.
+  - Day 8 Mini MATRIX: final Math and Science sets, BM/English final practice, Topik Merah post-holiday plan, reflection and back-to-school checklist.
+- Source-based quiz modules use topic-specific question sets rather than only the original generic four-subject quick quiz.
+- Activity/writing/STEM modules are represented as explicit learner modules that can be marked complete and synced.
+- The learning screen now renders a `Modul Pembelajaran Day X` library based on the selected Day.
+- `Mula Misi Day Ini` selects the first incomplete structured source module when available.
+- Module completion uses existing authenticated `/api/student/progress` storage with `module-<module-id>` task keys.
+- Green/yellow/red thresholds are represented in the content source as 80–100 / 60–79 / below 60, consistent with the supplied modules.
+- The one-time wiring workflow passed its source/static integration checks and was removed after use.
+- Cloudflare Workers Build succeeded for commit `e851e0c21c585d540f0b66939b849c68356f58d3`, version `434f0ea4-790e-4400-a40c-09a2166b5b6b`.
 
-**Important:** source and static checks are verified. The repaired module interactions still require a human phone test before being claimed as production behaviour in `CHANGELOG.md`.
+**Important:** repository integration and production deployment are verified. Human phone verification of each new Day/module interaction is still pending; do not claim every lesson flow is fully runtime-verified yet.
+
+### Interactive learning module repair in repository
+- Home `Mula Misi Day Ini` opens the first incomplete module/task for the selected Day instead of only changing screen.
+- Day tasks have `Buka`/`Ulang` actions.
+- Subject tasks open matching Math/Science/BM/English practice.
+- Non-quiz activities can be explicitly marked complete from the learning screen.
+- Correct quiz answers can complete the active module and persist progress through the D1 API.
+- Navigation scrolls to the top when changing app screens.
+- Quick quizzes rotate instead of randomly returning the same question repeatedly.
+- Rewards/badges render locked/unlocked state from actual progress instead of static text.
 
 ### Live Worker / D1 schema v2
 - Cloudflare Workers Build for current `main` has been operating successfully.
@@ -73,16 +94,16 @@ This document separates verified repository/configuration facts from pending run
 
 ## PENDING / NOT YET FULLY VERIFIED END-TO-END
 
-### Learning module interactions
-Need one real-phone pass on the repaired build:
-- Day 1–Day 8 buttons update the selected Day.
-- `Mula Misi Day Ini` opens the first incomplete task.
-- `Buka` on a Math/Science/BM/English task opens the correct subject module.
-- a correct answer increases XP and marks the active task complete,
-- wrong answer enters `Buku Silap Saya`,
-- progress remains after app reload,
-- bottom navigation reliably changes screens from any scroll position,
-- badges update from real progress.
+### Structured learning modules
+Need real-phone verification for the new source-based library:
+- switching Day 1–Day 8 changes the structured module list,
+- `Mula Misi Day Ini` opens the correct first incomplete source module,
+- quiz modules use their Day/topic-specific questions,
+- activity modules can be marked complete,
+- correct answers sync XP + `module-*` progress,
+- wrong answers still enter `Buku Silap Saya`,
+- completed modules remain completed after reload,
+- Day 8 red-topic/reflection modules render correctly.
 
 ### Student authentication remainder
 Need production proof for:
@@ -113,13 +134,14 @@ Need runtime proof for:
 Need end-to-end proof for checklist, quiz/mistakes, XP/stars, DLP language, mistake mastery, reload and second-device persistence.
 
 ## Known next safe steps
-1. Relaunch the installed PWA after the functional-module deployment.
-2. On Day 1 press `Mula Misi Day Ini` or `Buka` on Mathematics Diagnostic DLP.
-3. Answer one question and confirm XP/task progress visibly updates.
-4. Verify `Buku Silap` using one intentionally wrong answer.
-5. Then verify logout/login before adding a second learner.
-6. Test shared-device isolation and Parent Area linking.
-7. Record only behaviours actually proven in `CHANGELOG.md`.
+1. Relaunch installed PWA after the latest source-module deployment.
+2. Open `Belajar` and confirm `Modul Pembelajaran Day 1` appears.
+3. Open Mathematics DLP Diagnostic, answer one correct question and verify XP/module completion.
+4. Intentionally answer one question wrongly and verify Buku Silap.
+5. Switch to Day 4 and Day 6 to verify Math Power and STEM module libraries.
+6. Switch to Day 8 and verify Mini MATRIX + Topik Merah modules.
+7. Then continue logout/login, shared-device and Parent Area runtime verification.
+8. Record only behaviours actually proven in `CHANGELOG.md`.
 
 ## Security notes
 - Never commit Cloudflare/API tokens, credentials, PINs or recovery codes.

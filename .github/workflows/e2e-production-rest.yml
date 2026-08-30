@@ -1,0 +1,37 @@
+name: Production interaction E2E rest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/e2e-production-rest.mjs'
+      - '.github/workflows/e2e-production-rest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  interactive-rest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test remaining interactive flows on production
+        env:
+          BASE_URL: https://school.0com.my
+        run: node tests/e2e-production-rest.mjs
+      - name: Upload failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-rest-failure
+          path: e2e-rest-failure.png
+          if-no-files-found: ignore

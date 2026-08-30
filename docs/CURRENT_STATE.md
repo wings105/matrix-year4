@@ -12,7 +12,7 @@ This document separates verified repository facts from production/runtime verifi
 - `AGENTS.md` is the mandatory AI/developer entry point.
 - Project roadmap, decisions, current state, changelog and handoff documents exist.
 
-### Authentication/shared-device implementation is now on `main`
+### Authentication/shared-device implementation is on `main`
 - Student registration source uses `Nama` + learner-chosen `ID pelajar` + `PIN / Password` with `6 digit number` guidance.
 - Student ID availability is checked automatically after typing stops.
 - Public Student ID is separate from immutable internal student UUID.
@@ -27,43 +27,37 @@ This document separates verified repository facts from production/runtime verifi
 - Service worker bypasses `/api/*` caching and uses network-first navigation.
 - Static repository verification is automated by `scripts/verify-static.mjs` and `.github/workflows/verify.yml`.
 
-**Verification:** feature branch CI passed, the branch was fast-forwarded into `main` at commit `fb5f4c024eee7c7e205b9e9037b96e2527a9fa09`, and the `main` GitHub Actions `Verify repository` run completed successfully.
+**Verification:** feature branch CI passed, the implementation was fast-forwarded into `main`, and subsequent `main` repository verification runs completed successfully.
 
-### Previously verified Cloudflare / D1 baseline
-- Worker URL: `https://matrix-year4.msg-ebye.workers.dev/`.
+### Live Cloudflare Worker / D1 schema v2
+- Cloudflare Workers Build for current `main` completed successfully.
+- Automated `live-smoke` runs against `https://matrix-year4.msg-ebye.workers.dev` from GitHub Actions.
+- Live `/api/health` returned:
+  - `ok: true`
+  - `database: connected`
+  - `schema: ready`
+  - `schemaVersion: 2`
+  - `tables: 11`
+- This confirms the existing D1 database accepted the schema-v2 initialization/migration path without breaking health.
+
+### Live Student ID availability endpoint
+- Live `GET /api/auth/student-id-availability` was tested with a unique CI-generated learner ID.
+- Response returned `ok=true`, `valid=true`, `available=true` and a normalized ID.
+- Main CI now repeats the health/schema and ID-availability smoke checks after every `main` push.
+
+### Previously verified infrastructure baseline
 - D1 database: `matrix-year4-db`.
 - D1 binding: `DB`.
-- Before the authentication expansion, `/api/health` was manually verified with database connected and schema ready.
 - Custom domain `matrix.0com.my` is still waiting on `0com.my` Cloudflare zone activation/nameserver propagation.
 
-## PENDING / NOT YET VERIFIED IN PRODUCTION
+## PENDING / NOT YET FULLY VERIFIED END-TO-END
 
-### Cloudflare deployment of the new authentication build
-- GitHub `main` contains the new implementation and repository CI is green.
-- The new Cloudflare deployment has not yet been independently confirmed from this session.
-- Do not assume the live Worker is already running schema version 2 until `/api/health` is checked.
-
-### New D1 auth schema migration
-Source intends to add/migrate:
-- `students.student_code`
-- `students.pin_hash`
-- `students.pin_salt`
-- `students.recovery_hash`
-- `guardians`
-- `guardian_students`
-- `sessions`
-- `link_codes`
-- `auth_failures`
-- supporting indexes
-
-Must verify against the real existing D1 database before marking complete.
-
-### Student registration / login
-Need production proof for:
-- ID availability responds correctly,
+### Student registration / login writes
+Need production proof for POST/session behaviour:
 - new chosen ID is persisted uniquely,
 - six-digit PIN registration/login works,
-- duplicate ID is rejected,
+- expected student + stats rows are created,
+- duplicate Student ID returns a conflict,
 - wrong PIN increments failure tracking,
 - lockout activates and later clears,
 - logout/revocation works.
@@ -86,7 +80,7 @@ Need production proof for:
 - unlink preserves student progress.
 
 ### Persistent learning state
-Frontend source now uses authenticated D1 APIs, but end-to-end verification is still required for:
+Frontend source uses authenticated D1 APIs, but end-to-end verification is still required for:
 - checklist write/read,
 - quiz attempt + wrong-answer mistake,
 - XP/stars update,
@@ -94,18 +88,16 @@ Frontend source now uses authenticated D1 APIs, but end-to-end verification is s
 - mistake mastered state,
 - reload/cross-device persistence.
 
-### PWA cache
-Service-worker source now bypasses `/api/*` and uses network-first navigation. Verify on a real browser after deploy/update.
+### PWA cache/user-visible update
+Service-worker source bypasses `/api/*` and uses network-first navigation. Repository checks pass; verify actual phone/browser behaviour during learner registration test.
 
 ## Known next safe steps
-1. Confirm Cloudflare has deployed current `main`.
-2. Verify `/api/health` reports `schemaVersion: 2`.
-3. Verify `/api/auth/student-id-availability?id=testmatrix`.
-4. Manually register one learner through the live UI and confirm logout/login/state persistence.
-5. Test two learner profiles on one device.
-6. Register a guardian, generate child Link Code, link child and confirm dashboard isolation.
-7. Only then record those runtime behaviours in `CHANGELOG.md` as fully verified.
-8. Separately continue `0com.my` activation and connect `matrix.0com.my`.
+1. Manually open the live app and register one learner using name + chosen available Student ID + six-digit PIN.
+2. Confirm logout/login and cloud state persistence for that learner.
+3. Add a second learner on the same device and verify isolation.
+4. Register a guardian, generate child Link Code, link child and confirm dashboard isolation.
+5. Record only proven POST/session/shared-device/guardian behaviour in `CHANGELOG.md`.
+6. Separately continue `0com.my` activation and connect `matrix.0com.my`.
 
 ## Security notes
 - Never commit Cloudflare build tokens, API tokens, OpenAI keys or credentials.

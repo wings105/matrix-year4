@@ -1,0 +1,20 @@
+name: Verify repository
+
+on:
+  push:
+    branches: [main, feat/student-auth-shared-profiles]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check Worker syntax
+        run: node --check src/index.js
+      - name: Check frontend/auth/schema contracts
+        run: node scripts/verify-static.mjs

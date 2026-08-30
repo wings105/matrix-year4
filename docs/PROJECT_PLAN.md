@@ -128,33 +128,44 @@ Production verification still required:
 - [ ] Verify Parent Area reads only linked children.
 
 ## Phase C — Learning content and UX
-Repository implementation now:
-- [x] Day 1–Day 8 tasks have actionable `Buka` / `Ulang` module controls.
-- [x] `Mula Misi Day Ini` launches the first incomplete task for the selected Day.
-- [x] Subject tasks route into Math/Science/BM/English practice.
-- [x] Generic activities can be explicitly completed and synced.
-- [x] Correct answer can complete the active module through existing progress API.
-- [x] Screen navigation resets mobile scroll position so taps visibly change screens.
-- [x] Quick quizzes rotate questions instead of randomly repeating the same item.
-- [x] Reward badges render locked/unlocked state from real progress.
+
+### Structured Day 1–Day 8 source content
+- [x] Added `learning-content.js` as a structured learning content layer based on the owner's supplied Day 1–Day 8 MATRIX PDFs.
+- [x] Every Day has its own theme, goal, target and module list.
+- [x] Day 1 diagnostic modules: Math DLP, Science DLP, BM, English, Buku Silap.
+- [x] Day 2 Bahasa & Nombor: whole numbers, operations, BM comprehension, English vocabulary/grammar/reading, Science review and writing.
+- [x] Day 3 Malaysia/Sejarah/Sains: history/patriotism, scientific process skills, Life Science, mixed Math and language work.
+- [x] Day 4 Math Power: numbers/operations, fractions/decimals/percent, money/time/measurement, geometry/data and four-step problem solving.
+- [x] Day 5 English + Science: English vocabulary/grammar/reading/writing plus Humans, Animals, Plants and Scientific Skills.
+- [x] Day 6 STEM: Light, Sound, Energy, Materials, fair-test absorbency investigation, measurement/money/time and experiment writing/translation.
+- [x] Day 7 Consolidation: Math/Science topik merah, BM/English consolidation, History/RBT and family/reflection.
+- [x] Day 8 Mini MATRIX: final Math/Science, BM/English, Topik Merah post-holiday plan, reflection and back-to-school checklist.
+- [x] Traffic-light thresholds are encoded as HIJAU 80–100, KUNING 60–79, MERAH below 60.
+- [x] Source-based objective modules include topic-specific interactive question sets.
+- [x] Writing/STEM/reflection modules are represented as explicit activities that can be completed and synced.
+- [x] Learning screen shows `Modul Pembelajaran Day X` and changes with selected Day.
+- [x] `Mula Misi Day Ini` prefers the first incomplete source module.
+- [x] Module progress uses D1-backed `module-<module-id>` task keys.
+- [x] Cloudflare build/deploy succeeded for the source-module integration.
 
 Runtime verification still required:
-- [ ] Human phone test of Day selector -> module -> answer -> XP/progress update.
-- [ ] Human phone test of wrong answer -> `Buku Silap Saya`.
-- [ ] Human phone test of badges updating after progress.
+- [ ] Human phone test Day 1 source module -> correct answer -> XP/module progress.
+- [ ] Wrong answer -> `Buku Silap Saya`.
+- [ ] Day switching updates module library correctly.
+- [ ] Activity modules mark complete and persist after reload.
+- [ ] Day 4 Math Power, Day 6 STEM and Day 8 Mini MATRIX render correctly on phone.
 
-Next content depth:
-- [ ] Convert Day 1–Day 8 content into richer structured content/question data.
-- [ ] Expand Mathematics bank by topic/difficulty.
-- [ ] Expand Science bank by topic/scientific-process skill.
-- [ ] Expand BM and English activities.
-- [ ] Full daily flow: mission -> explanation -> guided practice -> feedback -> reflection.
-- [ ] Mastery calculation by topic.
-- [ ] Revision queue from `Buku Silap Saya`.
-- [ ] Clear parent summary of strengths, weaknesses and completed work.
+### Next content depth
+- [ ] Increase each source module from starter interactive questions to a larger bank closer to the full PDF exercise depth.
+- [ ] Add guided explanation before practice for difficult topics.
+- [ ] Add written-answer input and rubrics for BM/English writing instead of completion-only activity cards.
+- [ ] Add STEM observation/result/conclusion input fields for investigations.
+- [ ] Add mastery calculation per topic from actual attempts, not only module completion.
+- [ ] Build automatic revision queue from `Buku Silap Saya` + red/yellow topics.
+- [ ] Add clear parent summary of strengths, weaknesses and completed modules.
 
 ## Phase D — MATRIX exam preparation
-- [ ] Mini MATRIX timed mode.
+- [ ] Mini MATRIX timed mode with countdown and submit-at-end behaviour.
 - [ ] Exam paper/question-set mode.
 - [ ] Topic performance analytics.
 - [ ] Automatic red/yellow/green revision priorities.
@@ -179,7 +190,7 @@ Only after the core data flow is reliable:
 1. `school.0com.my` loads reliably on phone and desktop.
 2. Student can register with name + chosen available Student ID + six-digit PIN without phone/email.
 3. Several students can switch safely on one shared device.
-4. Student can open and complete Day 1–Day 8 modules/checklists and quizzes.
+4. Student can open and complete Day 1–Day 8 source-based modules/checklists and quizzes.
 5. Progress, quiz results, mistakes and stats persist in D1 under the correct internal student UUID.
 6. Parent view reads only explicitly linked children and can reset child PIN safely.
 7. PWA installs from Android browser/Home Screen.

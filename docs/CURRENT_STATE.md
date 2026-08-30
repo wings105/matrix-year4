@@ -34,20 +34,22 @@ This document separates verified repository/configuration facts from pending run
 - Existing production D1 accepted the schema-v2 migration path.
 - Live Student ID availability endpoint returned valid/available/normalized output for a CI-generated ID.
 
-### Cloudflare zone and custom domain configuration
+### Cloudflare zone and production custom domain
 - `0com.my` nameservers were changed at the registrar to Cloudflare nameservers.
-- Cloudflare now shows the `0com.my` zone as active/protected.
-- Owner chose `school.0com.my` as the production hostname instead of the earlier planned `matrix.0com.my`.
-- Cloudflare Worker Domains UI shows `school.0com.my` attached to Worker `matrix-year4` with Environment `Production` and Zone `0com.my`.
+- Cloudflare shows the `0com.my` zone as active/protected.
+- Production hostname is `school.0com.my`.
+- Cloudflare Worker Domains UI shows `school.0com.my` attached to Worker `matrix-year4`, Environment `Production`, Zone `0com.my`.
+- Human browser verification confirmed `https://school.0com.my/` resolves over HTTPS and renders the current MATRIX Tahun 4 learner/Parent Area UI.
+- GitHub Actions live smoke verification against `school.0com.my` succeeded: root HTML contains `MATRIX Tahun 4` and `/api/health` returns connected/ready schema v2 with 11 tables.
+- Future `main` pushes now re-check the production custom-domain root and health endpoint automatically.
 
 ## PENDING / NOT YET FULLY VERIFIED END-TO-END
 
-### Custom-domain runtime
-Need real runtime proof for:
-- `https://school.0com.my/` resolves and loads the current PWA,
-- `https://school.0com.my/api/health` returns expected schema-v2 health,
-- HTTPS certificate is valid,
-- phone/PWA install behaviour works on the custom hostname.
+### Phone / PWA install
+Need a real phone test for:
+- `https://school.0com.my/` on mobile browser,
+- Add to Home Screen / PWA installation,
+- installed-app launch and normal navigation.
 
 ### Student registration / login writes
 Need production proof for POST/session behaviour:
@@ -80,13 +82,12 @@ Need runtime proof for:
 Need real authenticated end-to-end tests for checklist, quiz/mistakes, XP/stars, DLP language, mistake mastery, reload and cross-device persistence.
 
 ## Known next safe steps
-1. Open `https://school.0com.my/` in a normal browser and confirm the current learner/profile UI loads.
-2. Open `https://school.0com.my/api/health` and confirm schema v2/11 tables.
-3. Then register one learner using name + chosen available Student ID + six-digit PIN.
-4. Verify logout/login and cloud state persistence.
-5. Add a second learner and test shared-device isolation.
-6. Test Parent Area linking.
-7. Record only behaviours actually proven in `CHANGELOG.md`.
+1. Open `https://school.0com.my/` on the intended phone and verify the mobile/PWA install path.
+2. Register one learner using name + chosen available Student ID + six-digit PIN.
+3. Verify logout/login and cloud state persistence.
+4. Add a second learner and test shared-device isolation.
+5. Test Parent Area linking.
+6. Record only behaviours actually proven in `CHANGELOG.md`.
 
 ## Security notes
 - Never commit Cloudflare/API tokens, credentials, PINs or recovery codes.

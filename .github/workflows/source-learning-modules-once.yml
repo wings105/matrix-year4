@@ -1,0 +1,65 @@
+name: Source learning modules once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/source-learning-modules-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wire structured Day 1-8 modules into learner UI
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          reps=[]
+          reps.append(("<script>\nconst STUDENT_PROFILES_KEY='matrix_student_profiles_v2';", "<script src=\"/learning-content.js\"></script>\n<script>\nconst STUDENT_PROFILES_KEY='matrix_student_profiles_v2';"))
+          reps.append(("  <div id=\"missionContext\" class=\"notice hidden\" style=\"max-width:760px\"></div>\n  <div class=\"panel\" style=\"max-width:760px\">", "  <div id=\"missionContext\" class=\"notice hidden\" style=\"max-width:760px\"></div>\n  <div class=\"panel\" style=\"max-width:900px;margin-bottom:14px\"><h3>🧩 Modul Pembelajaran Day <span id=\"learningDayNo\">1</span></h3><div class=\"muted\" id=\"learningDayGoal\"></div><div id=\"learningModules\" class=\"learning-modules\"></div></div>\n  <div class=\"panel\" style=\"max-width:760px\">"))
+          reps.append(("let currentDay=1,currentQuiz=null,currentTask=null,idTimer=null,parentIdTimer=null,parentChildrenCache=[];", "let currentDay=1,currentQuiz=null,currentTask=null,activeLearningModule=null,idTimer=null,parentIdTimer=null,parentChildrenCache=[];"))
+          reps.append(("  renderDays();renderTasks();renderSubjects();renderMistakes();renderRewards();renderMissionContext();", "  renderDays();renderTasks();renderSubjects();renderMistakes();renderRewards();renderMissionContext();renderLearningModules();"))
+          reps.append(("function selectDay(day){currentDay=day;currentTask=null;renderDays();renderTasks();renderMissionContext();}", "function selectDay(day){currentDay=day;currentTask=null;activeLearningModule=null;renderDays();renderTasks();renderMissionContext();renderLearningModules();}"))
+          reps.append(("function taskSubject(title){const t=String(title).toLowerCase();if(t.includes('math'))return 'Math';if(t.includes('science')||t.includes('sains')||t.includes('stem'))return 'Science';if(t.includes('english')||t.includes('vocabulary'))return 'English';if(t.includes('bm')||t.includes('bahasa melayu'))return 'BM';return null}\nfunction startMission(){\n  const d=DAYS[currentDay-1];let idx=d.tasks.findIndex((_,i)=>!progressDone(currentDay,`d${currentDay}-t${i}`));if(idx<0)idx=0;startTaskModule(currentDay,idx);\n}", "function taskSubject(title){const t=String(title).toLowerCase();if(t.includes('math'))return 'Math';if(t.includes('science')||t.includes('sains')||t.includes('stem'))return 'Science';if(t.includes('english')||t.includes('vocabulary'))return 'English';if(t.includes('bm')||t.includes('bahasa melayu'))return 'BM';return null}\nfunction sourceDay(day=currentDay){return window.MATRIX_LEARNING?.days?.[day]||null}\nfunction renderLearningModules(){\n  const d=sourceDay();if(!$('learningModules'))return;$('learningDayNo').textContent=currentDay;$('learningDayGoal').textContent=d?`${d.goal} • Sasaran: ${d.target}`:'Modul belum dimuatkan.';\n  const mods=d?.modules||[];$('learningModules').innerHTML=mods.map(m=>{const key=`module-${m.id}`;const done=progressDone(currentDay,key);const topics=(m.topics||[]).slice(0,5).join(' • ');return `<div class=\"learning-card ${done?'done':''}\"><div class=\"learning-head\"><div><span class=\"tag\">${safe(m.subject)}</span><b>${safe(m.title)}</b></div><span>${done?'✅':'◻️'}</span></div><p>${safe(m.desc||'')}</p><small>${safe(topics)}</small><div class=\"learning-actions\"><button class=\"btn ${done?'soft':'blue'}\" onclick=\"openLearningModule('${safe(m.id)}')\">${done?'Ulang modul':'Mula modul'}</button>${m.target?`<span class=\"tag\">Target ${m.target}%</span>`:''}</div></div>`}).join('');\n}\nfunction findLearningModule(id){return sourceDay()?.modules?.find(m=>m.id===id)||null}\nfunction startMission(){\n  const mods=sourceDay()?.modules||[];let m=mods.find(x=>!progressDone(currentDay,`module-${x.id}`))||mods[0];if(m){openLearningModule(m.id);return}\n  const d=DAYS[currentDay-1];let idx=d.tasks.findIndex((_,i)=>!progressDone(currentDay,`d${currentDay}-t${i}`));if(idx<0)idx=0;startTaskModule(currentDay,idx);\n}\nfunction openLearningModule(id){\n  const m=findLearningModule(id);if(!m){toast('Modul tidak dijumpai');return}activeLearningModule=m;currentTask={day:currentDay,index:-1,key:`module-${m.id}`,title:m.title,subject:m.subject==='Activity'?null:m.subject,moduleId:m.id};\n  if(m.type==='quiz'&&m.questions?.length){newQuestion(m.subject)}else{currentQuiz=null;$('quizSubject').textContent=`Day ${currentDay} • ${m.subject}`;$('quizQuestion').textContent=m.title;$('quizTranslate').textContent=m.desc||'Selesaikan aktiviti ini.';$('answers').innerHTML=`<div class=\"module-topic-list\">${(m.topics||[]).map(t=>`<span class=\"tag\">${safe(t)}</span>`).join('')}</div><button class=\"soft\" onclick=\"completeCurrentTask()\">✓ Tandakan modul siap</button>`}\n  renderMissionContext();go('learn');\n}\n"))
+          reps.append(("function renderSubjects(){\n  const data=[['🔢','Mathematics DLP','Math'],['🔬','Science DLP','Science'],['📝','Bahasa Melayu','BM'],['🇬🇧','English','English']];\n  $('subjects').innerHTML=data.map(x=>`<div class=\"subject\"><div class=\"ico\">${x[0]}</div><div class=\"grow\"><b>${x[1]}</b><small class=\"muted\">Quiz cepat</small></div><button class=\"btn soft\" onclick=\"newQuestion('${x[2]}');go('learn')\">Mula</button></div>`).join('');\n}", "function renderSubjects(){\n  const data=[['🔢','Mathematics DLP','Math'],['🔬','Science DLP','Science'],['📝','Bahasa Melayu','BM'],['🇬🇧','English','English']];\n  $('subjects').innerHTML=data.map(x=>`<div class=\"subject\"><div class=\"ico\">${x[0]}</div><div class=\"grow\"><b>${x[1]}</b><small class=\"muted\">Quick practice</small></div><button class=\"btn soft\" onclick=\"activeLearningModule=null;currentTask=null;newQuestion('${x[2]}');renderMissionContext();go('learn')\">Mula</button></div>`).join('');\n}"))
+          reps.append(("function newQuestion(subject){\n  const list=QUIZ[subject];if(!Array.isArray(list)||!list.length){toast('Modul belum ada soalan');return}quizCursor[subject]=(quizCursor[subject]+1)%list.length;currentQuiz={subject,q:list[quizCursor[subject]],answered:false};", "function newQuestion(subject){\n  const moduleList=(activeLearningModule&&activeLearningModule.subject===subject&&Array.isArray(activeLearningModule.questions))?activeLearningModule.questions:null;const list=moduleList?.length?moduleList:QUIZ[subject];if(!Array.isArray(list)||!list.length){toast('Modul belum ada soalan');return}const cursorKey=activeLearningModule?.id||subject;if(!(cursorKey in quizCursor))quizCursor[cursorKey]=-1;quizCursor[cursorKey]=(quizCursor[cursorKey]+1)%list.length;currentQuiz={subject,q:list[quizCursor[cursorKey]],answered:false};"))
+          reps.append(("async function completeCurrentTask(){if(!currentTask)return;try{await saveTaskProgress(currentTask.day,currentTask.key,true);renderStudent();renderMissionContext();toast('Modul selesai & sync ✓')}catch(e){toast(e.message)}}", "async function completeCurrentTask(){if(!currentTask)return;try{await saveTaskProgress(currentTask.day,currentTask.key,true);renderStudent();renderMissionContext();renderLearningModules();toast('Modul selesai & sync ✓')}catch(e){toast(e.message)}}"))
+          for old,new in reps:
+              if old not in s:
+                  raise SystemExit('Expected fragment missing: '+old[:140])
+              s=s.replace(old,new,1)
+          css='''\n<style id="learning-module-styles">\n.learning-modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.learning-card{border:1px solid #e2e8f0;border-radius:16px;padding:13px;background:#fff;min-width:0}.learning-card.done{background:#f0fdf4;border-color:#86efac}.learning-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.learning-head>div{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.learning-head b{font-size:13px}.learning-card p{font-size:12px;line-height:1.4;margin:8px 0}.learning-card small{font-size:10px;line-height:1.35;color:#64748b}.learning-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}.module-topic-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}@media(max-width:760px){.learning-modules{grid-template-columns:1fr}.learning-card{padding:12px}.learning-head b{font-size:12px}}\n</style>\n'''
+          s=s.replace('</head>',css+'</head>',1)
+          p.write_text(s)
+      - name: Verify source module integration
+        run: |
+          node --check src/index.js
+          node scripts/verify-static.mjs
+          node - <<'NODE'
+          const fs=require('fs');
+          const html=fs.readFileSync('index.html','utf8');
+          const data=fs.readFileSync('learning-content.js','utf8');
+          for(const x of ['/learning-content.js','function renderLearningModules()','function openLearningModule(','module-${m.id}']) if(!html.includes(x)) throw new Error('missing '+x);
+          for(let d=1;d<=8;d++) if(!data.includes(`${d}:{theme:`)) throw new Error('missing Day '+d);
+          new Function(data);
+          console.log('Day 1-8 structured learning modules wired.');
+          NODE
+      - name: Commit source learning modules
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Wire Day 1-8 source learning modules into app'
+          git push origin HEAD:main

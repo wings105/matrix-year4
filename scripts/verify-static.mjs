@@ -26,7 +26,16 @@ must(worker, '/api/auth/student/register', 'student registration route');
 must(worker, '/api/auth/student/login', 'student login route');
 must(worker, '/api/auth/guardian/register', 'guardian registration route');
 must(worker, '/api/guardian/link', 'guardian link route');
-must(worker, "iterations: 120000", 'PBKDF2 work factor');
+
+const pbkdf2Iterations = [...worker.matchAll(/iterations:\s*(\d+)/g)].map(match => Number(match[1]));
+if (!pbkdf2Iterations.length) throw new Error('PBKDF2 iteration count not found');
+if (pbkdf2Iterations.some(value => value > 100000)) {
+  throw new Error(`Cloudflare Workers PBKDF2 limit exceeded: ${pbkdf2Iterations.join(', ')}`);
+}
+if (!pbkdf2Iterations.includes(100000)) {
+  throw new Error(`Expected PBKDF2 work factor 100000, found: ${pbkdf2Iterations.join(', ')}`);
+}
+
 must(worker, "schemaVersion: 2", 'schema version');
 
 for (const table of ['guardians', 'guardian_students', 'sessions', 'link_codes', 'auth_failures']) {
@@ -36,4 +45,4 @@ for (const table of ['guardians', 'guardian_students', 'sessions', 'link_codes',
 must(schema, 'student_code TEXT UNIQUE COLLATE NOCASE', 'chosen public student ID schema');
 must(sw, "url.pathname.startsWith('/api/')", 'API cache bypass');
 
-console.log('Static verification passed: auth UI, routes, schema and service-worker guards are present.');
+console.log('Static verification passed: auth UI, routes, Cloudflare-compatible PBKDF2, schema and service-worker guards are present.');

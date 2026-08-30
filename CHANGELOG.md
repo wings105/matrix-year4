@@ -4,6 +4,16 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-30
 
+### Verified — `school.0com.my` production runtime
+- `https://school.0com.my/` resolves over HTTPS and renders the current MATRIX Tahun 4 learner/profile + Parent Area UI.
+- Added a permanent GitHub Actions live-smoke check for the production custom domain.
+- Automated custom-domain smoke verifies the root HTML contains `MATRIX Tahun 4`.
+- Automated custom-domain `/api/health` verifies `ok=true`, `database=connected`, `schema=ready`, `schemaVersion=2`, `tables=11`.
+
+**Verification:** human browser screenshot confirmed the production root UI; GitHub Actions run `33306184937` completed successfully after checking both `school.0com.my/` and `school.0com.my/api/health`.
+
+**Scope note:** Android/PWA installation, learner registration/login, shared-device isolation and Parent Area linking still require end-to-end manual verification.
+
 ### Verified — Cloudflare zone active and production custom domain configured
 - `0com.my` is active/protected in Cloudflare after the registrar nameserver change.
 - Owner selected `school.0com.my` as the production custom hostname, replacing the earlier planned `matrix.0com.my` hostname.
@@ -11,8 +21,6 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 - Project plan, current state, decisions and AI handoff were updated so future AI models use `school.0com.my` as the canonical custom hostname.
 
 **Verification:** confirmed from the Cloudflare UI screenshots supplied during setup and the corresponding repository documentation commits.
-
-**Scope note:** this verifies Cloudflare zone/domain configuration, not yet successful HTTPS/PWA/API runtime on `school.0com.my`. Root and `/api/health` runtime checks remain pending in `docs/CURRENT_STATE.md`.
 
 ### Verified — live schema v2 + Student ID availability smoke test
 - Cloudflare Workers Build for the authentication/shared-device code completed successfully from `main`.

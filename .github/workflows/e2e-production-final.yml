@@ -1,0 +1,37 @@
+name: Production final interactive E2E
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/e2e-production-final.mjs'
+      - '.github/workflows/e2e-production-final.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  final-interactive-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Run final production interaction suite
+        env:
+          BASE_URL: https://school.0com.my
+        run: node tests/e2e-production-final.mjs
+      - name: Upload failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-final-failure
+          path: e2e-final-failure.png
+          if-no-files-found: ignore

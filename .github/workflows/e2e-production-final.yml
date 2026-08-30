@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
     paths:
+      - 'index.html'
+      - 'learning-content.js'
+      - 'src/index.js'
       - 'tests/e2e-production-final.mjs'
       - '.github/workflows/e2e-production-final.yml'
   workflow_dispatch:
@@ -24,6 +27,8 @@ jobs:
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
+      - name: Wait for Cloudflare production deploy
+        run: sleep 45
       - name: Run final production interaction suite
         env:
           BASE_URL: https://school.0com.my

@@ -4,6 +4,7 @@ const index = fs.readFileSync('index.html', 'utf8');
 const worker = fs.readFileSync('src/index.js', 'utf8');
 const schema = fs.readFileSync('db/schema.sql', 'utf8');
 const sw = fs.readFileSync('sw.js', 'utf8');
+const learning = fs.readFileSync('learning-content.js', 'utf8');
 
 function must(haystack, needle, label) {
   if (!haystack.includes(needle)) {
@@ -14,6 +15,7 @@ function must(haystack, needle, label) {
 const inline = index.match(/<script>([\s\S]*?)<\/script>/);
 if (!inline) throw new Error('index.html inline script not found');
 new Function(inline[1]);
+new Function(learning);
 
 must(index, 'Nama pelajar', 'student name field');
 must(index, 'ID pelajar', 'student id field');
@@ -27,6 +29,33 @@ must(index, 'function saveTaskProgress(', 'task progress persistence helper');
 must(index, 'function renderRewards()', 'dynamic rewards renderer');
 must(index, "window.scrollTo({top:0", 'screen navigation scroll reset');
 must(index, 'id="missionContext"', 'learning module context UI');
+must(index, '/learning-content.js', 'structured learning content script');
+must(index, 'function renderLearningModules()', 'structured module renderer');
+must(index, 'function openLearningModule(', 'structured module launcher');
+must(index, 'module-${m.id}', 'D1-backed structured module progress key');
+
+must(learning, 'window.MATRIX_LEARNING=', 'structured learning content root');
+must(learning, "version:'2026-08-30-source-modules-v1'", 'learning content version');
+for (let day = 1; day <= 8; day++) {
+  must(learning, `${day}:{theme:`, `Day ${day} learning definition`);
+}
+for (const id of [
+  'd1-math-diagnostic',
+  'd2-math-number',
+  'd3-science-skills',
+  'd4-problem-solving',
+  'd5-science-humans',
+  'd6-stem',
+  'd7-red-math',
+  'd8-mini-math',
+  'd8-mini-science',
+  'd8-red-plan'
+]) {
+  must(learning, `id:'${id}'`, `learning module ${id}`);
+}
+must(learning, "green:{min:80", 'green mastery threshold');
+must(learning, "yellow:{min:60", 'yellow mastery threshold');
+must(learning, "red:{min:0", 'red mastery threshold');
 
 must(worker, '/api/auth/student/register', 'student registration route');
 must(worker, '/api/auth/student/login', 'student login route');
@@ -51,4 +80,4 @@ for (const table of ['guardians', 'guardian_students', 'sessions', 'link_codes',
 must(schema, 'student_code TEXT UNIQUE COLLATE NOCASE', 'chosen public student ID schema');
 must(sw, "url.pathname.startsWith('/api/')", 'API cache bypass');
 
-console.log('Static verification passed: auth, interactive learning modules, Cloudflare-compatible PBKDF2, schema and service-worker guards are present.');
+console.log('Static verification passed: auth, structured Day 1-8 learning modules, Cloudflare-compatible PBKDF2, schema and service-worker guards are present.');

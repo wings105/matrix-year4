@@ -18,3 +18,41 @@ jobs:
         run: node --check src/index.js
       - name: Check frontend/auth/schema contracts
         run: node scripts/verify-static.mjs
+
+  live-smoke:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wait for Cloudflare Worker and verify schema v2
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://matrix-year4.msg-ebye.workers.dev'
+          HEALTH=''
+          for attempt in $(seq 1 18); do
+            HEALTH="$(curl --connect-timeout 10 --max-time 20 -fsS "$BASE/api/health" || true)"
+            if HEALTH="$HEALTH" node -e "const d=JSON.parse(process.env.HEALTH||'{}'); process.exit(d.ok===true && d.database==='connected' && d.schema==='ready' && d.schemaVersion===2 ? 0 : 1)"; then
+              echo "Live health verified on attempt $attempt"
+              echo "$HEALTH"
+              break
+            fi
+            if [ "$attempt" -eq 18 ]; then
+              echo "Live Worker did not reach schemaVersion 2 in time"
+              echo "$HEALTH"
+              exit 1
+            fi
+            sleep 5
+          done
+      - name: Verify live Student ID availability endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://matrix-year4.msg-ebye.workers.dev'
+          TEST_ID="ci${GITHUB_RUN_ID}"
+          RESPONSE="$(curl --connect-timeout 10 --max-time 20 -fsS "$BASE/api/auth/student-id-availability?id=$TEST_ID")"
+          RESPONSE="$RESPONSE" node -e "const d=JSON.parse(process.env.RESPONSE||'{}'); if(!(d.ok===true && d.valid===true && d.available===true && d.normalizedId)){console.error(d);process.exit(1)}"
+          echo "$RESPONSE"

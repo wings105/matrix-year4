@@ -25,6 +25,7 @@ Build a mobile-first, child-friendly Year 4 learning PWA that turns the existing
 - [x] Create Cloudflare D1 database `matrix-year4-db`.
 - [x] Bind D1 to Worker as `DB`.
 - [x] Verify D1 connection and schema readiness through `/api/health`.
+- [x] Add automated live smoke checks on `main` for Worker health/schema and Student ID availability.
 - [ ] Activate `0com.my` Cloudflare zone after nameserver propagation.
 - [ ] Connect custom subdomain `matrix.0com.my` to Worker.
 - [ ] Verify HTTPS, PWA loading and API health on custom domain.
@@ -45,8 +46,8 @@ Repository implementation:
 - [x] Registration returns a one-time recovery code; only its hash is stored.
 - [x] Learning data uses immutable internal student UUID, not the public chosen Student ID.
 
-Still required before calling this shipped:
-- [ ] Verify Student ID availability against production D1.
+Runtime verification:
+- [x] Verify Student ID availability against production D1.
 - [ ] Verify successful student registration creates the expected D1 rows.
 - [ ] Verify duplicate Student ID returns a conflict.
 - [ ] Verify correct/wrong PIN login and temporary lockout end-to-end.
@@ -121,8 +122,8 @@ Repository implementation:
 - [x] Manual legacy-browser checklist import is available to reduce accidental cross-profile migration.
 - [x] D1 schema/source contains guardians, sessions, link codes, auth throttling and guardian-child links.
 
-Production verification still required:
-- [ ] Confirm the schema migration runs safely against the existing D1 database.
+Production verification:
+- [x] Confirm the schema v2 migration runs successfully against the existing D1 database (`/api/health`: connected, ready, schemaVersion 2, 11 tables).
 - [ ] Verify each authenticated persistence endpoint in production.
 - [ ] Verify progress survives browser reload and a second device login.
 - [ ] Verify shared-device switching never mixes records.

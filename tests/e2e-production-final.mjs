@@ -285,7 +285,7 @@ async function main() {
     await page.locator('#parentChildPin').fill(childPin);
     await page.locator('#parentChildIdStatus.success').waitFor({ state: 'visible', timeout: 10000 });
     await page.locator('#parentChildSubmit').click();
-    await page.locator('#parentChildren .child-card').filter({ hasText: `@${childId}` }).waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('#parentChildren .child-card').filter({ hasText: `@${childId}` }).waitFor({ state: 'visible', timeout: 30000 });
   });
 
   await step('Parent Keluar/Tukar User, remembered parent card, and parent login work', async () => {

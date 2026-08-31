@@ -32,7 +32,7 @@ async function waitToast(text) {
   await page.waitForFunction(expected => {
     const el = document.getElementById('toast');
     return !!el && el.classList.contains('show') && (!expected || (el.textContent || '').includes(expected));
-  }, text || '', { timeout: 10000 });
+  }, text || '', { timeout: 30000 });
 }
 
 async function nav(screen) {

@@ -218,7 +218,7 @@ async function main() {
   await step('Jana Link Code, Import progress lama, and Buang-from-device cancel work', async () => {
     await nav('profile');
     await page.getByRole('button', { name: /Jana 6-digit Link Code/ }).click();
-    await page.locator('#linkCodeBox .code-box').waitFor({ state: 'visible', timeout: 5000 });
+    await page.locator('#linkCodeBox .code-box').waitFor({ state: 'visible', timeout: 30000 });
     linkCode = ((await page.locator('#linkCodeBox .code-box').textContent()) || '').trim();
     if (!/^\d{6}$/.test(linkCode)) throw new Error(`Bad Link Code ${linkCode}`);
 

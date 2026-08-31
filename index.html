@@ -436,6 +436,7 @@ async function answerQuestion(index,button){
     const d=await api('/api/student/quiz',{method:'POST',body:{subject:currentQuiz.subject,topic:q.topic,question:q.bm||q.en,selectedAnswer:q.a[index],correctAnswer:q.a[q.c],isCorrect:correct}});
     state.stats={...state.stats,...d.stats};
     if(correct&&currentTask&&currentTask.subject===currentQuiz.subject&&!progressDone(currentTask.day,currentTask.key)){await saveTaskProgress(currentTask.day,currentTask.key,true)}
+    renderStudent();renderMissionContext();renderLearningModules();
     toast(correct?'Betul! Modul & XP dikemas kini 🎉':'Belum tepat — masuk Buku Silap');
     const nextSubject=currentQuiz.subject;setTimeout(async()=>{await loadStudentState();renderMissionContext();if(!correct)newQuestion(nextSubject)},1200);
   }catch(e){currentQuiz.answered=false;[...$('answers').children].forEach(b=>b.classList.remove('correct','wrong'));toast(e.message)}

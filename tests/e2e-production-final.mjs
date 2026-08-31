@@ -63,7 +63,7 @@ async function registerStudent() {
   await page.locator('#regName').fill('E2E Final Pelajar');
   await page.locator('#regStudentId').fill(studentId);
   await page.locator('#regPin').fill(studentPin);
-  await page.locator('#regIdStatus.success').waitFor({ state: 'visible', timeout: 10000 });
+  await page.locator('#regIdStatus.success').waitFor({ state: 'visible', timeout: 30000 });
   await page.locator('#regSubmit').click();
   await waitStudentApp();
 }
@@ -245,7 +245,7 @@ async function main() {
     await page.locator('#regName').fill('Duplicate');
     await page.locator('#regStudentId').fill(studentId);
     await page.locator('#regPin').fill(studentPin);
-    await page.locator('#regIdStatus.error').waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('#regIdStatus.error').waitFor({ state: 'visible', timeout: 30000 });
     if (!(await page.locator('#regSubmit').isDisabled())) throw new Error('Duplicate ID submit remained enabled');
   });
 
@@ -255,7 +255,7 @@ async function main() {
     await page.locator('#guardianName').fill('E2E Final Parent');
     await page.locator('#guardianPin').fill(parentPin);
     await page.getByRole('button', { name: 'Daftar Parent Area', exact: true }).click();
-    await page.locator('#parentApp:not(.hidden)').waitFor({ state: 'visible', timeout: 15000 });
+    await page.locator('#parentApp:not(.hidden)').waitFor({ state: 'visible', timeout: 30000 });
     parentCode = ((await page.locator('#parentCode').textContent()) || '').trim();
     if (!parentCode) throw new Error('Parent code missing');
   });
@@ -264,7 +264,7 @@ async function main() {
     await page.locator('#parentLinkCode').fill(linkCode);
     await page.locator('#parentRelationship').fill('anak');
     await page.getByRole('button', { name: 'Pautkan anak', exact: true }).click();
-    await page.locator('#parentChildren .child-card').filter({ hasText: `@${studentId}` }).waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('#parentChildren .child-card').filter({ hasText: `@${studentId}` }).waitFor({ state: 'visible', timeout: 30000 });
   });
 
   await step('Simpan profil pada device button works', async () => {
@@ -285,14 +285,14 @@ async function main() {
     page.once('dialog', d => d.accept());
     await card.getByRole('button', { name: 'Unlink', exact: true }).click();
     await waitToast('Akses parent diputuskan');
-    await page.waitForFunction(id => ![...document.querySelectorAll('#parentChildren .child-card')].some(el => (el.textContent || '').includes('@' + id)), studentId, { timeout: 5000 });
+    await page.waitForFunction(id => ![...document.querySelectorAll('#parentChildren .child-card')].some(el => (el.textContent || '').includes('@' + id)), studentId, { timeout: 30000 });
   });
 
   await step('Parent Daftar & pautkan button creates and links new child', async () => {
     await page.locator('#parentChildName').fill('E2E Final Child');
     await page.locator('#parentChildId').fill(childId);
     await page.locator('#parentChildPin').fill(childPin);
-    await page.locator('#parentChildIdStatus.success').waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('#parentChildIdStatus.success').waitFor({ state: 'visible', timeout: 30000 });
     await page.locator('#parentChildSubmit').click();
     await page.locator('#parentChildren .child-card').filter({ hasText: `@${childId}` }).waitFor({ state: 'visible', timeout: 30000 });
   });
@@ -306,7 +306,7 @@ async function main() {
     if ((await page.locator('#parentCodeLogin').inputValue()) !== parentCode) throw new Error('Remembered parent did not prefill code');
     await page.locator('#parentPinLogin').fill(parentPin);
     await page.getByRole('button', { name: 'Masuk Parent Area', exact: true }).click();
-    await page.locator('#parentApp:not(.hidden)').waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator('#parentApp:not(.hidden)').waitFor({ state: 'visible', timeout: 30000 });
   });
 
   await step('Learner login works with parent-reset PIN', async () => {

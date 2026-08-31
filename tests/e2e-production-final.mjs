@@ -166,17 +166,19 @@ async function main() {
     if (!after || after === before) throw new Error('Tukar bahasa did not change value');
   });
 
-  await step('Correct answer adds XP and completes active module', async () => {
+  await step('Correct answer gives immediate feedback, advances, adds XP and completes active module', async () => {
     await nav('home');
     await page.locator('#days .day').first().click();
     await nav('learn');
     const firstModule = page.locator('#learningModules button').first();
     await firstModule.click();
     const correct = await page.evaluate(() => eval('currentQuiz.q.c'));
+    const questionBefore = (await page.locator('#quizQuestion').textContent())?.trim();
     const xpBefore = Number((await page.locator('#xp').textContent()) || 0);
     await page.locator('#answers button').nth(correct).click();
-    await waitToast('Betul');
-    await page.waitForTimeout(1600);
+    await waitToast('Bagus! +10 XP');
+    await page.waitForFunction(previous => document.querySelector('#quizQuestion')?.textContent?.trim() !== previous, questionBefore, { timeout: 5000 });
+    await page.waitForFunction(before => Number(document.querySelector('#xp')?.textContent || 0) > before, xpBefore, { timeout: 30000 });
     await nav('home');
     const xpAfter = Number((await page.locator('#xp').textContent()) || 0);
     if (!(xpAfter > xpBefore)) throw new Error(`XP did not increase: ${xpBefore} -> ${xpAfter}`);
@@ -185,12 +187,19 @@ async function main() {
     if (!(await firstCard.evaluate(el => el.classList.contains('done')))) throw new Error('Correct answer did not mark module done');
   });
 
-  await step('Wrong answer enters Buku Silap; Saya dah faham button masters it', async () => {
+  await step('First wrong answer retries; second wrong enters Buku Silap and can be mastered', async () => {
     await nav('learn');
     await page.evaluate(() => eval("activeLearningModule=null;currentTask=null;newQuestion('Math')"));
     const count = await page.locator('#answers button').count();
     const correct = await page.evaluate(() => eval('currentQuiz.q.c'));
-    await page.locator('#answers button').nth((correct + 1) % count).click();
+    const wrong = (correct + 1) % count;
+    const questionBefore = (await page.locator('#quizQuestion').textContent())?.trim();
+    await page.locator('#answers button').nth(wrong).click();
+    await waitToast('Cuba sekali lagi');
+    await page.waitForTimeout(1100);
+    const questionAfterRetry = (await page.locator('#quizQuestion').textContent())?.trim();
+    if (questionAfterRetry !== questionBefore) throw new Error('First wrong answer unexpectedly advanced the question');
+    await page.locator('#answers button').nth(wrong).click();
     await waitToast('Belum tepat');
     await page.waitForTimeout(1600);
     await nav('mistakes');

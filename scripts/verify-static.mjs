@@ -33,7 +33,11 @@ must(index, '/learning-content.js', 'structured learning content script');
 must(index, 'function renderLearningModules()', 'structured module renderer');
 must(index, 'function openLearningModule(', 'structured module launcher');
 must(index, 'module-${m.id}', 'D1-backed structured module progress key');
-must(index, 'if(resultClass)b.classList.add(resultClass)', 'safe quiz answer result class handling');
+must(index, 'answered:false,attempts:0', 'quiz retry attempt tracking');
+must(index, 'function persistQuizResult(', 'background quiz persistence helper');
+must(index, 'Cuba sekali lagi', 'first wrong answer retry feedback');
+must(index, "toast('Bagus! +10 XP 🎉')", 'immediate correct answer feedback');
+must(index, 'setTimeout(()=>{if(currentQuiz===quiz)newQuestion(subject)},850)', 'correct answer auto-advance');
 must(index, 'renderStudent();renderMissionContext();renderLearningModules();', 'immediate quiz progress UI update');
 
 must(learning, 'window.MATRIX_LEARNING=', 'structured learning content root');

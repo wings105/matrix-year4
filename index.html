@@ -22,7 +22,7 @@ button,input,select{font:inherit}.hidden{display:none!important}.muted{color:var
 .grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}.metric{padding:14px;background:#fff;border:1px solid var(--line);border-radius:var(--r)}.metric small{color:var(--muted);font-weight:800}.metric b{display:block;font-size:22px;margin-top:3px}.bar{height:8px;background:#e9eef7;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#23b479,#54c6ff);border-radius:inherit}
 .layout{display:grid;grid-template-columns:1.15fr 1fr .85fr;gap:14px;margin-top:18px}.panel h3{margin:0 0 12px}.days{display:flex;gap:7px;overflow:auto;padding-bottom:5px}.day{min-width:47px;height:47px;border-radius:50%;border:1px solid var(--line);background:#f8fbff;font-weight:900;color:#596b8d;cursor:pointer}.day.current{background:var(--purple);color:#fff;border:4px solid #ded4ff}.day.done{background:var(--green);color:#fff}.theme{margin:12px 0;padding:12px;border-radius:14px;background:linear-gradient(135deg,#fff4d8,#f2ecff)}
 .task{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}.task:last-child{border-bottom:0}.task input{width:19px;height:19px;accent-color:var(--green)}.task b{display:block}.task small{color:var(--muted)}.tag{font-size:11px;border-radius:999px;padding:4px 7px;background:#eef4ff;color:#2c5fb3;font-weight:900}.subject{display:flex;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:14px;margin:9px 0}.subject .ico{font-size:28px}.subject .grow{flex:1}.topic{display:flex;align-items:center;gap:8px;padding:9px;border-bottom:1px solid #eef2f7}.dot{width:10px;height:10px;border-radius:50%}.red{background:var(--red)}.amber{background:var(--yellow)}.good{background:var(--green)}
-.screen{display:none}.screen.active{display:block}.quizq{font-size:20px;font-weight:900;margin:14px 0}.answers{display:grid;gap:8px}.answers button{text-align:left;border:1px solid var(--line);border-radius:13px;background:#fff;padding:12px;cursor:pointer}.answers button:hover{background:#eef6ff}.answers button.correct{background:#e6f8ef;border-color:#6dd19d}.answers button.wrong{background:#fff0f0;border-color:#ec9494}
+.screen{display:none}.screen.active{display:block}.quizq{font-size:20px;font-weight:900;margin:14px 0}.answers{display:grid;gap:8px}.answers button{text-align:left;border:1px solid var(--line);border-radius:13px;background:#fff;padding:12px;cursor:pointer}.answers button:hover{background:#eef6ff}.answers button.correct{background:#e6f8ef;border-color:#6dd19d;animation:correctPop .45s ease-out}.answers button.wrong{background:#fff0f0;border-color:#ec9494}@keyframes correctPop{50%{transform:scale(1.025)}}
 .settings-grid,.parent-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.code-box{font-size:30px;font-weight:950;letter-spacing:4px;text-align:center;padding:16px;background:#eef6ff;border-radius:14px}.child-card{padding:15px;border:1px solid var(--line);border-radius:16px;margin:9px 0}.child-card .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
 .toast{position:fixed;right:18px;bottom:18px;background:#102859;color:#fff;padding:12px 16px;border-radius:13px;opacity:0;transform:translateY(20px);transition:.25s;z-index:50}.toast.show{opacity:1;transform:none}
 .loading{opacity:.65;pointer-events:none}
@@ -422,24 +422,43 @@ function go(name){
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>go(btn.dataset.screen)));
 
 function newQuestion(subject){
-  const moduleList=(activeLearningModule&&activeLearningModule.subject===subject&&Array.isArray(activeLearningModule.questions))?activeLearningModule.questions:null;const list=moduleList?.length?moduleList:QUIZ[subject];if(!Array.isArray(list)||!list.length){toast('Modul belum ada soalan');return}const cursorKey=activeLearningModule?.id||subject;if(!(cursorKey in quizCursor))quizCursor[cursorKey]=-1;quizCursor[cursorKey]=(quizCursor[cursorKey]+1)%list.length;currentQuiz={subject,q:list[quizCursor[cursorKey]],answered:false};
+  const moduleList=(activeLearningModule&&activeLearningModule.subject===subject&&Array.isArray(activeLearningModule.questions))?activeLearningModule.questions:null;const list=moduleList?.length?moduleList:QUIZ[subject];if(!Array.isArray(list)||!list.length){toast('Modul belum ada soalan');return}const cursorKey=activeLearningModule?.id||subject;if(!(cursorKey in quizCursor))quizCursor[cursorKey]=-1;quizCursor[cursorKey]=(quizCursor[cursorKey]+1)%list.length;currentQuiz={subject,q:list[quizCursor[cursorKey]],answered:false,attempts:0};
   const q=currentQuiz.q;const lang=state.stats?.preferred_language||'dual';$('quizSubject').textContent=subject+(subject==='Math'||subject==='Science'?' DLP':'');
   if(lang==='en'&&q.en){$('quizQuestion').textContent=q.en;$('quizTranslate').textContent=''}
   else if(lang==='bm'||!q.en){$('quizQuestion').textContent=q.bm||q.en;$('quizTranslate').textContent=''}
   else{$('quizQuestion').textContent=q.bm||q.en;$('quizTranslate').textContent=q.en&&q.bm?q.en:''}
   $('answers').innerHTML=q.a.map((a,i)=>`<button onclick="answerQuestion(${i},this)">${safe(a)}</button>`).join('');
 }
-async function answerQuestion(index,button){
-  if(!currentQuiz||currentQuiz.answered)return;currentQuiz.answered=true;const q=currentQuiz.q;const correct=index===q.c;
-  [...$('answers').children].forEach((b,i)=>{const resultClass=i===q.c?'correct':i===index?'wrong':null;if(resultClass)b.classList.add(resultClass)});
+function quizHint(q){return q.hint||'Baca soalan perlahan-lahan dan semak pilihan jawapan sekali lagi.'}
+function clearAnswerFeedback(){[...$('answers').children].forEach(b=>b.classList.remove('correct','wrong'))}
+async function persistQuizResult({subject,q,index,correct,task}){
   try{
-    const d=await api('/api/student/quiz',{method:'POST',body:{subject:currentQuiz.subject,topic:q.topic,question:q.bm||q.en,selectedAnswer:q.a[index],correctAnswer:q.a[q.c],isCorrect:correct}});
+    const d=await api('/api/student/quiz',{method:'POST',body:{subject,topic:q.topic,question:q.bm||q.en,selectedAnswer:q.a[index],correctAnswer:q.a[q.c],isCorrect:correct}});
     state.stats={...state.stats,...d.stats};
-    if(correct&&currentTask&&currentTask.subject===currentQuiz.subject&&!progressDone(currentTask.day,currentTask.key)){await saveTaskProgress(currentTask.day,currentTask.key,true)}
+    if(correct&&task&&task.subject===subject&&!progressDone(task.day,task.key))await saveTaskProgress(task.day,task.key,true);
     renderStudent();renderMissionContext();renderLearningModules();
-    toast(correct?'Betul! Modul & XP dikemas kini 🎉':'Belum tepat — masuk Buku Silap');
-    const nextSubject=currentQuiz.subject;setTimeout(async()=>{await loadStudentState();renderMissionContext();if(!correct)newQuestion(nextSubject)},1200);
-  }catch(e){currentQuiz.answered=false;[...$('answers').children].forEach(b=>b.classList.remove('correct','wrong'));toast(e.message)}
+    setTimeout(()=>loadStudentState().catch(()=>{}),1200);
+  }catch(e){toast('Progress belum sync. Cuba lagi sebentar.');console.error(e)}
+}
+function answerQuestion(index,button){
+  if(!currentQuiz||currentQuiz.answered)return;const quiz=currentQuiz;const q=quiz.q;const subject=quiz.subject;const correct=index===q.c;const task=currentTask?{...currentTask}:null;quiz.answered=true;
+  if(correct){
+    [...$('answers').children].forEach((b,i)=>{if(i===q.c)b.classList.add('correct')});
+    toast('Bagus! +10 XP 🎉');
+    void persistQuizResult({subject,q,index,correct:true,task});
+    setTimeout(()=>{if(currentQuiz===quiz)newQuestion(subject)},850);
+    return;
+  }
+  quiz.attempts=(quiz.attempts||0)+1;button.classList.add('wrong');
+  if(quiz.attempts===1){
+    toast(`Cuba sekali lagi 💡 ${quizHint(q)}`);
+    setTimeout(()=>{if(currentQuiz===quiz){clearAnswerFeedback();quiz.answered=false}},900);
+    return;
+  }
+  [...$('answers').children].forEach((b,i)=>{if(i===q.c)b.classList.add('correct');else if(i===index)b.classList.add('wrong')});
+  toast(`Belum tepat — jawapan betul: ${q.a[q.c]}`);
+  void persistQuizResult({subject,q,index,correct:false,task});
+  setTimeout(()=>{if(currentQuiz===quiz)newQuestion(subject)},1500);
 }
 function renderRewards(){
   const completed=(state.progress||[]).filter(p=>Number(p.is_done)===1).length;const mastered=(state.mistakes||[]).filter(m=>m.status==='mastered').length;const allDays=DAYS.every((_,i)=>dayDone(i+1));const badges=[['🌱','Starter',completed>0||(state.stats?.xp||0)>0,'Mula satu aktiviti'],['📚','Consistent Learner',completed>=20,'Lengkap 20 tugasan'],['🧠','Error Hunter',mastered>0,'Baiki sekurang-kurangnya 1 kesalahan'],['🏅','MATRIX Warrior',allDays,'Lengkap Day 1–Day 8']];$('badgeList').innerHTML=badges.map(b=>`<p>${b[2]?'✅':'🔒'} ${b[0]} <b>${b[1]}</b><br><small class="muted">${b[3]}</small></p>`).join('');

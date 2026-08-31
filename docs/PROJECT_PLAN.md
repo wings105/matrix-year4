@@ -48,8 +48,8 @@ Repository implementation:
 Runtime verification:
 - [x] Live Student ID availability endpoint verified against production D1.
 - [x] Register one real learner and enter authenticated cloud-backed dashboard successfully.
-- [ ] Verify fresh logout/login with the same PIN.
-- [ ] Verify duplicate Student ID conflict.
+- [ ] Verify fresh logout/login with the same original PIN.
+- [x] Verify duplicate Student ID conflict.
 - [ ] Verify wrong PIN and temporary lockout end-to-end.
 
 ### Several learners on one device
@@ -78,7 +78,7 @@ Repository implementation:
 - [x] Remembered parent profile contains only display name + Parent Code.
 
 Verification still required:
-- [ ] Register/login guardian in production.
+- [x] Register/login guardian in production.
 - [ ] Confirm parent and student route authorization stays separated.
 
 ### Parent-child linking

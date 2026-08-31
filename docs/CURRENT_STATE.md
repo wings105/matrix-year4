@@ -1,10 +1,20 @@
 # CURRENT STATE — MATRIX Tahun 4
 
-Last updated: 2026-08-30
+Last updated: 2026-08-31
 
 This document separates verified repository/configuration facts from pending runtime verification.
 
 ## VERIFIED
+
+### Production interactive end-to-end verification
+- GitHub Actions production E2E passed all 21 interaction groups against `https://school.0com.my` on 2026-08-31.
+- A correct structured-module answer now records XP and marks the active module complete; the learner UI renders both changes immediately after the successful API writes.
+- A wrong answer creates a `Buku Silap Saya` item, and `Saya dah faham` successfully marks it mastered.
+- Day 1–Day 8 task `Buka`/`Ulang` actions and checklist writes were exercised against production.
+- Student registration, fresh learner login after a parent PIN reset, duplicate Student ID blocking, remembered profile switching and local profile removal were exercised.
+- Guardian registration/login, Link Code linking, parent-created child linking, PIN reset and unlink were exercised.
+
+**Verification:** GitHub Actions `Production final interactive E2E` run `33344998029`, commit `3f8f63145e763fd06e7b7b1a9e0b45c5d974c711`, passed `21/21` groups.
 
 ### Repository / governance
 - Repository: `wings105/matrix-year4`.
@@ -35,7 +45,7 @@ This document separates verified repository/configuration facts from pending run
 - The app entered the authenticated learner dashboard and loaded the learner name, zeroed stats, Day 1 content and cloud-backed state.
 - This verifies the registration POST + authenticated student-state load path after the PBKDF2 correction.
 
-**Still not separately verified:** logout then fresh login with the same PIN, duplicate-ID conflict, wrong-PIN throttling/lockout and explicit D1 row inspection.
+**Still not separately verified:** logout then fresh login with the same original PIN, wrong-PIN throttling/lockout and explicit D1 row inspection.
 
 ### Source-based Day 1–Day 8 learning content now implemented
 - Added `learning-content.js` as the structured learning-content source for the app.
@@ -108,7 +118,6 @@ Need real-phone verification for the new source-based library:
 ### Student authentication remainder
 Need production proof for:
 - fresh logout/login with six-digit PIN,
-- duplicate ID returns conflict,
 - wrong PIN increments failures,
 - temporary lockout activates/clears,
 - logout/revocation works.

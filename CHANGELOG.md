@@ -2,6 +2,17 @@
 
 This file records VERIFIED changes only. Planned or unverified work belongs in `docs/PROJECT_PLAN.md` or `docs/CURRENT_STATE.md`.
 
+## 2026-08-31
+
+### Verified — production quiz progress repair and complete interactive E2E pass
+- Fixed the learner quiz answer flow so unselected answer buttons no longer attempt to add an empty CSS class, which previously stopped the handler before the quiz API request.
+- After a successful quiz answer, XP and the completed-module state now render immediately in the learner UI before the background state refresh finishes.
+- Added static guards for safe quiz answer class handling and immediate progress rendering.
+- Updated the production E2E waits to allow the real Cloudflare/D1 persistence path to finish instead of treating a slow but successful write as a UI failure.
+- The final production suite passed all 21 test groups: registration, Day 1–Day 8 task/checklist interactions, subject practice, language preference, correct/wrong quiz paths, Buku Silap mastery, rewards, link codes, shared-profile switching, duplicate-ID handling, guardian registration/linking, PIN reset, unlinking, parent-created children and login flows.
+
+**Verification:** GitHub Actions `Production final interactive E2E` run `33344998029` completed successfully on commit `3f8f63145e763fd06e7b7b1a9e0b45c5d974c711`; the run reports `PASS 21/21 test groups`. Repository verification also passed for the same commit.
+
 ## 2026-08-30
 
 ### Verified — structured Day 1–Day 8 source learning modules deployed

@@ -1,6 +1,27 @@
 # AI HANDOFF — MATRIX Tahun 4
 
-Last updated: 2026-08-30
+Last updated: 2026-08-31
+
+## Latest verified session — quiz progress repair
+
+### Requested
+- Read all repository Markdown guidance and fix the production learner quiz issue.
+
+### Changed
+- Fixed the empty CSS-class error in `answerQuestion` that prevented quiz persistence.
+- Render XP and completed-module state immediately after successful quiz/progress writes.
+- Added static regression guards and made the production E2E waits suitable for the observed Cloudflare/D1 write duration.
+
+### Verified
+- GitHub Actions production suite `33344998029` passed all `21/21` interaction groups on commit `3f8f63145e763fd06e7b7b1a9e0b45c5d974c711`.
+- Verified paths include correct/wrong answers, XP, module completion, Buku Silap mastery, all Day task/checklist interactions, student/guardian flows, linking, reset PIN and parent-created children.
+
+### Still pending
+- Wrong-PIN lockout/clear behaviour, multi-learner data isolation, Link Code expiry/one-time reuse, second-device persistence and real-phone visual checks of every source module remain separate checks.
+
+### Next safe step
+1. Open the installed PWA on the child's phone, complete one Day 1 module and confirm the immediate XP/module response looks clear.
+2. Then test two real learner profiles on one device and the wrong-PIN temporary lockout.
 
 Use this as the short operational handoff between AI models/sessions. Read `AGENTS.md` first.
 
@@ -64,13 +85,13 @@ The learning UI now renders `Modul Pembelajaran Day X`, and `Mula Misi Day Ini` 
 Do not claim these complete until manually/runtime tested:
 1. New `Modul Pembelajaran Day X` UI on the actual installed phone.
 2. Day switching changes the structured module library correctly.
-3. Correct source-module answer updates XP and `module-*` progress in D1.
-4. Wrong source-module answer enters `Buku Silap Saya`.
+3. Correct source-module answer updates XP and `module-*` progress in D1. (Verified by production E2E; still check the child-facing phone presentation.)
+4. Wrong source-module answer enters `Buku Silap Saya`. (Verified by production E2E; still check the child-facing phone presentation.)
 5. Activity module completion survives reload.
 6. Day 4 Math Power, Day 6 STEM and Day 8 Mini MATRIX phone flows.
-7. Fresh logout/login with same PIN; duplicate ID; wrong-PIN/lockout.
+7. Fresh logout/login with same original PIN; wrong-PIN/lockout.
 8. Two learners on one shared device with data isolation.
-9. Guardian registration + child linking + Parent Area controls.
+9. Guardian registration, child linking and Parent Area controls. (Verified by production E2E; real-phone review remains useful.)
 
 ## Exact next safe step
 Human action required next:

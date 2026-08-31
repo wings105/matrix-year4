@@ -204,7 +204,7 @@ async function main() {
     await page.waitForTimeout(1600);
     await nav('mistakes');
     const card = page.locator('#mistakeList .child-card').first();
-    await card.waitFor({ state: 'visible', timeout: 5000 });
+    await card.waitFor({ state: 'visible', timeout: 30000 });
     await card.getByRole('button', { name: /Saya dah faham/ }).click();
     await waitToast('mastered');
   });

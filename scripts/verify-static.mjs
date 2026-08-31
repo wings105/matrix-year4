@@ -33,6 +33,7 @@ must(index, '/learning-content.js', 'structured learning content script');
 must(index, 'function renderLearningModules()', 'structured module renderer');
 must(index, 'function openLearningModule(', 'structured module launcher');
 must(index, 'module-${m.id}', 'D1-backed structured module progress key');
+must(index, 'if(resultClass)b.classList.add(resultClass)', 'safe quiz answer result class handling');
 
 must(learning, 'window.MATRIX_LEARNING=', 'structured learning content root');
 must(learning, "version:'2026-08-30-source-modules-v1'", 'learning content version');

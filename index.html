@@ -431,7 +431,7 @@ function newQuestion(subject){
 }
 async function answerQuestion(index,button){
   if(!currentQuiz||currentQuiz.answered)return;currentQuiz.answered=true;const q=currentQuiz.q;const correct=index===q.c;
-  [...$('answers').children].forEach((b,i)=>b.classList.add(i===q.c?'correct':i===index?'wrong':''));
+  [...$('answers').children].forEach((b,i)=>{const resultClass=i===q.c?'correct':i===index?'wrong':null;if(resultClass)b.classList.add(resultClass)});
   try{
     const d=await api('/api/student/quiz',{method:'POST',body:{subject:currentQuiz.subject,topic:q.topic,question:q.bm||q.en,selectedAnswer:q.a[index],correctAnswer:q.a[q.c],isCorrect:correct}});
     state.stats={...state.stats,...d.stats};

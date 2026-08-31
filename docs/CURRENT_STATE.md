@@ -8,13 +8,13 @@ This document separates verified repository/configuration facts from pending run
 
 ### Production interactive end-to-end verification
 - GitHub Actions production E2E passed all 21 interaction groups against `https://school.0com.my` on 2026-08-31.
-- A correct structured-module answer now records XP and marks the active module complete; the learner UI renders both changes immediately after the successful API writes.
-- A wrong answer creates a `Buku Silap Saya` item, and `Saya dah faham` successfully marks it mastered.
+- A correct structured-module answer immediately shows `Bagus! +10 XP`, has a small visual celebration and automatically advances to the next question without waiting for D1. XP and active-module completion then sync in the background.
+- The first wrong answer gives a hint and retry on the same question; the second wrong answer reveals the answer, creates a `Buku Silap Saya` item, and `Saya dah faham` successfully marks it mastered.
 - Day 1–Day 8 task `Buka`/`Ulang` actions and checklist writes were exercised against production.
 - Student registration, fresh learner login after a parent PIN reset, duplicate Student ID blocking, remembered profile switching and local profile removal were exercised.
 - Guardian registration/login, Link Code linking, parent-created child linking, PIN reset and unlink were exercised.
 
-**Verification:** GitHub Actions `Production final interactive E2E` run `33344998029`, commit `3f8f63145e763fd06e7b7b1a9e0b45c5d974c711`, passed `21/21` groups.
+**Verification:** GitHub Actions `Production final interactive E2E` run `33346987283`, commit `d68dd7490e4169f523e527659a09f04a6a226bd5`, passed `21/21` groups; repository verification run `33346987254` also passed.
 
 ### Repository / governance
 - Repository: `wings105/matrix-year4`.

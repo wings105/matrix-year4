@@ -4,6 +4,14 @@ This file records VERIFIED changes only. Planned or unverified work belongs in `
 
 ## 2026-08-31
 
+### Verified — immediate quiz response, retry flow and production E2E
+- Correct answers now show `Bagus! +10 XP` immediately, give a small visual celebration and automatically load the next question after about 0.85 seconds; the learner does not wait for a Cloudflare/D1 write before moving on.
+- The first wrong answer now says `Cuba sekali lagi` with a hint and leaves the same question available. Only a second wrong attempt reveals the correct answer, records the attempt and adds it to `Buku Silap Saya`.
+- Quiz persistence runs in the background and refreshes XP, module progress and mistakes when the cloud response arrives. A sync problem is shown clearly without hiding the instant learning feedback.
+- Extended production assertions only where a real cloud write is asynchronous, while retaining immediate learner-facing response checks.
+
+**Verification:** static verification passed and GitHub Actions `Production final interactive E2E` run `33346987283` passed all `21/21` groups on commit `d68dd7490e4169f523e527659a09f04a6a226bd5`, including immediate correct feedback/auto-next and first-wrong retry/second-wrong Buku Silap behaviour. Repository verification run `33346987254` also passed.
+
 ### Verified — production quiz progress repair and complete interactive E2E pass
 - Fixed the learner quiz answer flow so unselected answer buttons no longer attempt to add an empty CSS class, which previously stopped the handler before the quiz API request.
 - After a successful quiz answer, XP and the completed-module state now render immediately in the learner UI before the background state refresh finishes.

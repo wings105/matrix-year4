@@ -2,25 +2,25 @@
 
 Last updated: 2026-08-31
 
-## Latest verified session — quiz progress repair
+## Latest verified session — immediate quiz feedback and retry flow
 
 ### Requested
-- Read all repository Markdown guidance and fix the production learner quiz issue.
+- Fix delayed quiz feedback and make a correct answer advance automatically.
 
 ### Changed
-- Fixed the empty CSS-class error in `answerQuestion` that prevented quiz persistence.
-- Render XP and completed-module state immediately after successful quiz/progress writes.
-- Added static regression guards and made the production E2E waits suitable for the observed Cloudflare/D1 write duration.
+- Correct answer feedback is rendered synchronously, then the next question loads after about 0.85 seconds while persistence runs in the background.
+- First wrong answer gives `Cuba sekali lagi` plus a hint; second wrong answer reveals the correct answer and persists it to `Buku Silap Saya`.
+- Added static guards and production E2E coverage for the immediate auto-next and two-step wrong-answer flow. Production cloud assertions use realistic timeouts without changing learner-facing speed.
 
 ### Verified
-- GitHub Actions production suite `33344998029` passed all `21/21` interaction groups on commit `3f8f63145e763fd06e7b7b1a9e0b45c5d974c711`.
-- Verified paths include correct/wrong answers, XP, module completion, Buku Silap mastery, all Day task/checklist interactions, student/guardian flows, linking, reset PIN and parent-created children.
+- GitHub Actions production suite `33346987283` passed all `21/21` interaction groups on commit `d68dd7490e4169f523e527659a09f04a6a226bd5`; repository verification `33346987254` passed too.
+- Verified paths include immediate correct feedback/auto-next, first-wrong retry, second-wrong Buku Silap entry, XP/module completion, all Day task/checklist interactions, student/guardian flows, linking, reset PIN and parent-created children.
 
 ### Still pending
 - Wrong-PIN lockout/clear behaviour, multi-learner data isolation, Link Code expiry/one-time reuse, second-device persistence and real-phone visual checks of every source module remain separate checks.
 
 ### Next safe step
-1. Open the installed PWA on the child's phone, complete one Day 1 module and confirm the immediate XP/module response looks clear.
+1. Open the installed PWA on the child's phone, complete one Day 1 module and confirm the immediate feedback, hint and auto-next timing feel clear.
 2. Then test two real learner profiles on one device and the wrong-PIN temporary lockout.
 
 Use this as the short operational handoff between AI models/sessions. Read `AGENTS.md` first.

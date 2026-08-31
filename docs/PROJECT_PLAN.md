@@ -1,6 +1,6 @@
 # PROJECT PLAN — MATRIX Tahun 4
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-08-31
 
 ## Product goal
 Build a mobile-first, child-friendly Year 4 learning PWA that turns the Day 1–Day 8 holiday revision plan into an interactive learning system and continues into October MATRIX exam preparation.
@@ -121,8 +121,8 @@ Repository implementation:
 - [x] Existing production D1 accepted schema v2 migration successfully.
 
 Production verification still required:
-- [ ] Verify checklist write/read through the real learner session.
-- [ ] Verify quiz -> XP/Buku Silap -> reload persistence.
+- [x] Verify checklist write/read through the production learner session.
+- [x] Verify quiz -> XP/Buku Silap persistence through the production learner session.
 - [ ] Verify progress survives reload and second-device login.
 - [ ] Verify profile switching never mixes records.
 - [ ] Verify Parent Area reads only linked children.
@@ -149,8 +149,9 @@ Production verification still required:
 - [x] Cloudflare build/deploy succeeded for the source-module integration.
 
 Runtime verification still required:
-- [ ] Human phone test Day 1 source module -> correct answer -> XP/module progress.
-- [ ] Wrong answer -> `Buku Silap Saya`.
+- [x] Production E2E: Day 1 source module -> correct answer -> immediate feedback/auto-next -> XP/module progress.
+- [x] Production E2E: first wrong answer retries; second wrong answer -> `Buku Silap Saya`.
+- [ ] Human phone review of the child-facing timing and wording for the same flows.
 - [ ] Day switching updates module library correctly.
 - [ ] Activity modules mark complete and persist after reload.
 - [ ] Day 4 Math Power, Day 6 STEM and Day 8 Mini MATRIX render correctly on phone.
